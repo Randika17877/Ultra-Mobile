@@ -44,6 +44,14 @@
         <item name="cornerSize">50%</item>
     </style>
 
+    <style name="ShapeAppearance.BottomRounded" parent="">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSizeTopLeft">0dp</item>
+        <item name="cornerSizeTopRight">0dp</item>
+        <item name="cornerSizeBottomLeft">32dp</item>
+        <item name="cornerSizeBottomRight">32dp</item>
+    </style>
+
     <style name="UltraButton" parent="Widget.Material3.Button">
         <item name="android:backgroundTint">@color/um_primary</item>
         <item name="android:textColor">@color/um_text_on_primary</item>

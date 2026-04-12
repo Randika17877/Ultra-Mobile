@@ -1,5 +1,5 @@
-# Created by https://www.toptal.com/developers/gitignore/api/java,android,gradle,groovy,firebase
-# Edit at https://www.toptal.com/developers/gitignore?templates=java,android,gradle,groovy,firebase
+# Created by https://www.toptal.com/developers/gitignore/api/android,java,gradle,groovy,firebase
+# Edit at https://www.toptal.com/developers/gitignore?templates=android,java,gradle,groovy,firebase
 
 ### Android ###
 # Gradle files
@@ -121,4 +121,4 @@ gradle-app.setting
 ### Gradle Patch ###
 # Java heap dump
 
-# End of https://www.toptal.com/developers/gitignore/api/java,android,gradle,groovy,firebase
+# End of https://www.toptal.com/developers/gitignore/api/android,java,gradle,groovy,firebase
