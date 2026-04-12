@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/um_background"
+    tools:context=".fragment.ProfileFragment">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <!-- Profile header card -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/um_surface_card"
+            android:orientation="horizontal"
+            android:padding="24dp"
+            android:gravity="center_vertical">
+
+            <com.google.android.material.imageview.ShapeableImageView
+                android:id="@+id/profile_pic"
+                android:layout_width="72dp"
+                android:layout_height="72dp"
+                android:scaleType="centerCrop"
+                android:src="@drawable/person_24px"
+                android:background="@color/um_surface_elevated"
+                app:shapeAppearanceOverlay="@style/CircleImage" />
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_marginStart="16dp"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/profile_name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Tech Explorer"
+                    android:textColor="@color/um_text_primary"
+                    android:textSize="18sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/profile_email"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    android:text="user@ultramobile.lk"
+                    android:textColor="@color/um_text_secondary"
+                    android:textSize="13sp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="6dp"
+                    android:text="Ultra Member"
+                    android:textColor="@color/um_primary"
+                    android:textSize="11sp"
+                    android:textStyle="bold"
+                    android:letterSpacing="0.1" />
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <View android:layout_width="match_parent" android:layout_height="1dp" android:background="@color/um_surface_border"/>
+
+        <!-- Stats row -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/um_surface_card"
+            android:orientation="horizontal"
+            android:padding="16dp">
+
+            <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:orientation="vertical" android:gravity="center">
+                <TextView android:id="@+id/profile_orders_count" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="0" android:textColor="@color/um_primary" android:textSize="22sp" android:textStyle="bold"/>
+                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Orders" android:textColor="@color/um_text_secondary" android:textSize="12sp" android:layout_marginTop="2dp"/>
+            </LinearLayout>
+
+            <View android:layout_width="1dp" android:layout_height="40dp" android:background="@color/um_surface_border"/>
+
+            <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:orientation="vertical" android:gravity="center">
+                <TextView android:id="@+id/profile_wishlist_count" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="0" android:textColor="@color/um_primary" android:textSize="22sp" android:textStyle="bold"/>
+                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Wishlist" android:textColor="@color/um_text_secondary" android:textSize="12sp" android:layout_marginTop="2dp"/>
+            </LinearLayout>
+
+            <View android:layout_width="1dp" android:layout_height="40dp" android:background="@color/um_surface_border"/>
+
+            <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:orientation="vertical" android:gravity="center">
+                <TextView android:id="@+id/profile_reviews_count" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="0" android:textColor="@color/um_primary" android:textSize="22sp" android:textStyle="bold"/>
+                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Reviews" android:textColor="@color/um_text_secondary" android:textSize="12sp" android:layout_marginTop="2dp"/>
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <View android:layout_width="match_parent" android:layout_height="8dp" android:background="@color/um_background"/>
+
+        <!-- Menu items -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/um_surface_card"
+            android:orientation="vertical">
+
+            <!-- Edit Profile -->
+            <LinearLayout android:id="@+id/profile_menu_edit" android:layout_width="match_parent" android:layout_height="56dp" android:orientation="horizontal" android:gravity="center_vertical" android:paddingStart="20dp" android:paddingEnd="20dp" android:background="?attr/selectableItemBackground" android:clickable="true" android:focusable="true">
+                <ImageView android:layout_width="22dp" android:layout_height="22dp" android:src="@drawable/person_24px" />
+                <TextView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:layout_marginStart="16dp" android:text="Edit Profile" android:textColor="@color/um_text_primary" android:textSize="15sp"/>
+                <ImageView android:layout_width="18dp" android:layout_height="18dp" android:src="@drawable/keyboard_arrow_down_24px"  />
+            </LinearLayout>
+            <View android:layout_width="match_parent" android:layout_height="1dp" android:background="@color/um_surface_border" android:layout_marginStart="58dp"/>
+
+            <!-- Orders -->
+            <LinearLayout android:id="@+id/profile_menu_orders" android:layout_width="match_parent" android:layout_height="56dp" android:orientation="horizontal" android:gravity="center_vertical" android:paddingStart="20dp" android:paddingEnd="20dp" android:background="?attr/selectableItemBackground" android:clickable="true" android:focusable="true">
+                <ImageView android:layout_width="22dp" android:layout_height="22dp" android:src="@drawable/orders_24px" />
+                <TextView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:layout_marginStart="16dp" android:text="My Orders" android:textColor="@color/um_text_primary" android:textSize="15sp"/>
+                <ImageView android:layout_width="18dp" android:layout_height="18dp" android:src="@drawable/keyboard_arrow_down_24px" />
+            </LinearLayout>
+            <View android:layout_width="match_parent" android:layout_height="1dp" android:background="@color/um_surface_border" android:layout_marginStart="58dp"/>
+
+            <!-- Wishlist -->
+            <LinearLayout android:id="@+id/profile_menu_wishlist" android:layout_width="match_parent" android:layout_height="56dp" android:orientation="horizontal" android:gravity="center_vertical" android:paddingStart="20dp" android:paddingEnd="20dp" android:background="?attr/selectableItemBackground" android:clickable="true" android:focusable="true">
+                <ImageView android:layout_width="22dp" android:layout_height="22dp" android:src="@drawable/favorite_24px" />
+                <TextView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:layout_marginStart="16dp" android:text="Wishlist" android:textColor="@color/um_text_primary" android:textSize="15sp"/>
+                <ImageView android:layout_width="18dp" android:layout_height="18dp" android:src="@drawable/keyboard_arrow_down_24px" />
+            </LinearLayout>
+            <View android:layout_width="match_parent" android:layout_height="1dp" android:background="@color/um_surface_border" android:layout_marginStart="58dp"/>
+
+            <!-- Settings -->
+            <LinearLayout android:id="@+id/profile_menu_settings" android:layout_width="match_parent" android:layout_height="56dp" android:orientation="horizontal" android:gravity="center_vertical" android:paddingStart="20dp" android:paddingEnd="20dp" android:background="?attr/selectableItemBackground" android:clickable="true" android:focusable="true">
+                <ImageView android:layout_width="22dp" android:layout_height="22dp" android:src="@drawable/settings_24px"/>
+                <TextView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:layout_marginStart="16dp" android:text="Settings" android:textColor="@color/um_text_primary" android:textSize="15sp"/>
+                <ImageView android:layout_width="18dp" android:layout_height="18dp" android:src="@drawable/keyboard_arrow_down_24px" />
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <View android:layout_width="match_parent" android:layout_height="8dp" android:background="@color/um_background"/>
+
+        <!-- Logout -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/um_surface_card"
+            android:orientation="vertical">
+
+            <LinearLayout android:id="@+id/profile_menu_logout" android:layout_width="match_parent" android:layout_height="56dp" android:orientation="horizontal" android:gravity="center_vertical" android:paddingStart="20dp" android:paddingEnd="20dp" android:background="?attr/selectableItemBackground" android:clickable="true" android:focusable="true">
+                <ImageView android:layout_width="22dp" android:layout_height="22dp" android:src="@drawable/logout_24px"/>
+                <TextView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:layout_marginStart="16dp" android:text="Sign Out" android:textColor="@color/um_error" android:textSize="15sp"/>
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <View android:layout_width="match_parent" android:layout_height="24dp" android:background="@color/um_background"/>
+
+    </LinearLayout>
+
+</androidx.core.widget.NestedScrollView>

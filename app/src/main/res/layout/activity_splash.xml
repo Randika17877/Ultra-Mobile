@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/um_background"
+    tools:context=".activity.SplashActivity">
+
+    <!-- Subtle grid overlay effect -->
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:alpha="0.04"
+        android:background="#00E5FF" />
+
+    <!-- Center content -->
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:orientation="vertical"
+        android:gravity="center">
+
+        <ImageView
+            android:id="@+id/splashLogo"
+            android:layout_width="120dp"
+            android:layout_height="120dp"
+            android:layout_gravity="center" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:text="ULTRA MOBILE"
+            android:textColor="@color/um_primary"
+            android:textSize="28sp"
+            android:textStyle="bold"
+            android:letterSpacing="0.15" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="6dp"
+            android:text="THE DIGITAL FRONTIER"
+            android:textColor="@color/um_text_secondary"
+            android:textSize="11sp"
+            android:letterSpacing="0.3" />
+
+    </LinearLayout>
+
+    <!-- Version bottom -->
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|center_horizontal"
+        android:layout_marginBottom="60dp"
+        android:orientation="vertical"
+        android:gravity="center">
+
+        <ProgressBar
+            android:id="@+id/splashProgressBar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="invisible"
+            android:indeterminateTint="@color/um_primary" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:text="@string/app_version"
+            android:textColor="@color/um_text_hint"
+            android:textSize="11sp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:text="@string/app_copy"
+            android:textColor="@color/um_text_hint"
+            android:textSize="10sp" />
+
+    </LinearLayout>
+
+</FrameLayout>

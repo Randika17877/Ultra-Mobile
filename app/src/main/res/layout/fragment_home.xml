@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/um_background"
+    tools:context=".fragment.HomeFragment">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <!-- Hero banner -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/um_surface_card"
+            android:orientation="horizontal"
+            android:padding="20dp"
+            android:gravity="center_vertical">
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Digital"
+                    android:textColor="@color/um_text_primary"
+                    android:textSize="26sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Showroom"
+                    android:textColor="@color/um_primary"
+                    android:textSize="26sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:text="Premium devices at\nyour fingertips"
+                    android:textColor="@color/um_text_secondary"
+                    android:textSize="12sp" />
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <!-- Section divider -->
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/um_surface_border" />
+
+        <!-- Categories section -->
+        <include
+            android:id="@+id/home_category_section"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            layout="@layout/item_section" />
+
+        <!-- Top Selling section -->
+        <include
+            android:id="@+id/home_top_sell_section"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            layout="@layout/item_section" />
+
+        <!-- All Products section -->
+        <include
+            android:id="@+id/home_all_products_section"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            layout="@layout/item_section" />
+
+    </LinearLayout>
+
+</androidx.core.widget.NestedScrollView>

@@ -1,0 +1,30 @@
+<resources>
+    <string name="app_name">Ultra Mobile</string>
+    <string name="app_version">V 1.0.0</string>
+    <string name="app_copy">© Ultra Mobile 2024</string>
+    <string name="side_nav_home_title">Home</string>
+    <string name="side_nav_profile_title">Profile</string>
+    <string name="side_nav_orders_title">Orders</string>
+    <string name="side_nav_wishlist_title">Wishlist</string>
+    <string name="side_nav_cart_title">Cart</string>
+    <string name="side_nav_message_title">Message</string>
+    <string name="side_nav_settings_title">Settings</string>
+    <string name="side_nav_login_title">Login</string>
+    <string name="side_nav_logout_title">Logout</string>
+    <string name="bottom_nav_home_title">Home</string>
+    <string name="bottom_nav_category_title">Category</string>
+    <string name="bottom_nav_cart_title">Cart</string>
+    <string name="bottom_nav_profile_title">Profile</string>
+    <string name="search_hint">Search devices…</string>
+    <string name="drawer_open">Open</string>
+    <string name="drawer_close">Close</string>
+    <string name="login_title">Sign in to Ultra Mobile</string>
+    <string name="forgot_password">Forgot Password?\n</string>
+    <string name="text_sign_in">Sign In</string>
+    <string name="text_create_account">New here? Create an account</string>
+    <string name="text_sign_up">Create Account</string>
+    <string name="signup_title">Join Ultra Mobile</string>
+    <string name="text_signin_account">Already have an account?</string>
+    <string name="text_password_message">Password must contain at least 6 characters</string>
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+</resources>

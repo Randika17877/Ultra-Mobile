@@ -1,0 +1,67 @@
+<resources>
+    <style name="Theme.UltraMobile" parent="Theme.Material3.Dark.NoActionBar">
+        <item name="colorPrimary">@color/um_primary</item>
+        <item name="colorOnPrimary">@color/um_text_on_primary</item>
+        <item name="colorPrimaryContainer">@color/um_surface_card</item>
+        <item name="colorOnPrimaryContainer">@color/um_primary</item>
+        <item name="colorSecondary">@color/um_primary_dim</item>
+        <item name="colorOnSecondary">@color/um_text_primary</item>
+        <item name="colorSecondaryContainer">@color/um_surface_elevated</item>
+        <item name="colorOnSecondaryContainer">@color/um_accent</item>
+        <item name="colorTertiary">@color/um_success</item>
+        <item name="colorOnTertiary">@color/um_background</item>
+        <item name="colorError">@color/um_error</item>
+        <item name="colorOnError">@color/um_text_primary</item>
+        <item name="android:colorBackground">@color/um_background</item>
+        <item name="colorOnBackground">@color/um_text_primary</item>
+        <item name="colorSurface">@color/um_surface</item>
+        <item name="colorOnSurface">@color/um_text_primary</item>
+        <item name="colorSurfaceVariant">@color/um_surface_card</item>
+        <item name="colorOnSurfaceVariant">@color/um_text_secondary</item>
+        <item name="colorOutline">@color/um_surface_border</item>
+        <item name="colorOutlineVariant">@color/um_surface_elevated</item>
+        <item name="colorSurfaceInverse">@color/um_text_primary</item>
+        <item name="colorOnSurfaceInverse">@color/um_background</item>
+        <item name="colorPrimaryInverse">@color/um_primary_dark</item>
+        <item name="android:statusBarColor">@color/um_background</item>
+        <item name="android:navigationBarColor">@color/um_surface</item>
+        <item name="android:windowLightStatusBar">false</item>
+        <!-- Toolbar -->
+        <item name="toolbarStyle">@style/UltraToolbar</item>
+    </style>
+
+    <style name="UltraToolbar" parent="Widget.MaterialComponents.Toolbar">
+        <item name="android:background">@color/um_surface</item>
+        <item name="titleTextColor">@color/um_text_primary</item>
+    </style>
+
+    <style name="Theme.UltraMobile.FullScreen" parent="Theme.UltraMobile">
+        <item name="android:windowFullscreen">true</item>
+    </style>
+
+    <style name="CircleImage">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">50%</item>
+    </style>
+
+    <style name="UltraButton" parent="Widget.Material3.Button">
+        <item name="android:backgroundTint">@color/um_primary</item>
+        <item name="android:textColor">@color/um_text_on_primary</item>
+        <item name="android:textStyle">bold</item>
+        <item name="cornerRadius">8dp</item>
+    </style>
+
+    <style name="UltraButtonOutlined" parent="Widget.Material3.Button.OutlinedButton">
+        <item name="strokeColor">@color/um_primary</item>
+        <item name="android:textColor">@color/um_primary</item>
+        <item name="cornerRadius">8dp</item>
+    </style>
+
+    <style name="UltraCard" parent="Widget.Material3.CardView.Elevated">
+        <item name="cardBackgroundColor">@color/um_surface_card</item>
+        <item name="strokeColor">@color/um_surface_border</item>
+        <item name="strokeWidth">1dp</item>
+        <item name="cardElevation">0dp</item>
+        <item name="cardCornerRadius">12dp</item>
+    </style>
+</resources>

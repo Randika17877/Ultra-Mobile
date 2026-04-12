@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="100dp"
+    android:height="100dp"
+    android:viewportWidth="100"
+    android:viewportHeight="100">
+
+    <!-- Dark background circle -->
+    <path
+        android:fillColor="#111827"
+        android:pathData="M50,5A45,45 0 1,1 50,95A45,45 0 1,1 50,5Z" />
+
+    <!-- Outer ring -->
+    <path
+        android:strokeColor="#00E5FF"
+        android:strokeWidth="2"
+        android:fillColor="@android:color/transparent"
+        android:pathData="M50,8A42,42 0 1,1 50,92A42,42 0 1,1 50,8Z" />
+
+    <!-- Lightning bolt / U letter combined -->
+    <path
+        android:fillColor="#00E5FF"
+        android:pathData="M36,28 L36,58 Q36,72 50,72 Q64,72 64,58 L64,48 L56,48 L56,58 Q56,64 50,64 Q44,64 44,58 L44,28 Z" />
+
+    <!-- Accent dot top right -->
+    <path
+        android:fillColor="#18FFFF"
+        android:pathData="M64,28 L64,40 L56,40 L56,28 Z" />
+
+</vector>

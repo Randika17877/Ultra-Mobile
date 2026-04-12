@@ -1,0 +1,285 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/um_background"
+    tools:context=".fragment.CheckoutFragment">
+
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/checkout_btn_proceed">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="12dp">
+
+            <!-- Shipping Card -->
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/shipping_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:cardBackgroundColor="@color/um_surface_card"
+                app:strokeColor="@color/um_surface_border"
+                app:strokeWidth="1dp"
+                app:cardElevation="0dp"
+                app:cardCornerRadius="12dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:padding="16dp">
+
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:gravity="center_vertical"
+                            android:layout_centerVertical="true">
+
+                            <View
+                                android:layout_width="3dp"
+                                android:layout_height="18dp"
+                                android:background="@color/um_primary"
+                                android:layout_marginEnd="10dp" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Shipping Details"
+                                android:textColor="@color/um_text_primary"
+                                android:textSize="15sp"
+                                android:textStyle="bold" />
+
+                        </LinearLayout>
+
+                        <ImageView
+                            android:id="@+id/shipping_layout_btn"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:src="@drawable/keyboard_arrow_down_24px"
+                            android:layout_alignParentEnd="true"
+                            android:layout_centerVertical="true"
+                            android:rotation="180" />
+
+                    </RelativeLayout>
+
+                    <LinearLayout
+                        android:id="@+id/shipping_layout_body"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:paddingStart="16dp"
+                        android:paddingEnd="16dp"
+                        android:paddingBottom="16dp">
+
+                        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="NAME" android:textColor="@color/um_primary" android:textSize="11sp" android:letterSpacing="0.12" android:textStyle="bold" android:layout_marginTop="8dp"/>
+                        <EditText android:id="@+id/shipping_details_name" android:layout_width="match_parent" android:layout_height="48dp" android:layout_marginTop="6dp" android:background="@drawable/custom_input_search" android:hint="Your name" android:inputType="text" android:paddingStart="14dp" android:paddingEnd="14dp" android:textColor="@color/um_text_primary" android:textColorHint="@color/um_text_hint" android:textSize="14sp"/>
+
+                        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="EMAIL" android:textColor="@color/um_primary" android:textSize="11sp" android:letterSpacing="0.12" android:textStyle="bold" android:layout_marginTop="12dp"/>
+                        <EditText android:id="@+id/shipping_details_email" android:layout_width="match_parent" android:layout_height="48dp" android:layout_marginTop="6dp" android:background="@drawable/custom_input_search" android:hint="user@example.com" android:inputType="textEmailAddress" android:paddingStart="14dp" android:paddingEnd="14dp" android:textColor="@color/um_text_primary" android:textColorHint="@color/um_text_hint" android:textSize="14sp"/>
+
+                        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="CONTACT" android:textColor="@color/um_primary" android:textSize="11sp" android:letterSpacing="0.12" android:textStyle="bold" android:layout_marginTop="12dp"/>
+                        <EditText android:id="@+id/shipping_details_contact" android:layout_width="match_parent" android:layout_height="48dp" android:layout_marginTop="6dp" android:background="@drawable/custom_input_search" android:hint="+94 xx xxx xxxx" android:inputType="phone" android:paddingStart="14dp" android:paddingEnd="14dp" android:textColor="@color/um_text_primary" android:textColorHint="@color/um_text_hint" android:textSize="14sp"/>
+
+                        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="ADDRESS LINE 1" android:textColor="@color/um_primary" android:textSize="11sp" android:letterSpacing="0.12" android:textStyle="bold" android:layout_marginTop="12dp"/>
+                        <EditText android:id="@+id/shipping_details_address1" android:layout_width="match_parent" android:layout_height="48dp" android:layout_marginTop="6dp" android:background="@drawable/custom_input_search" android:hint="Street address" android:inputType="text" android:paddingStart="14dp" android:paddingEnd="14dp" android:textColor="@color/um_text_primary" android:textColorHint="@color/um_text_hint" android:textSize="14sp"/>
+
+                        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="ADDRESS LINE 2" android:textColor="@color/um_primary" android:textSize="11sp" android:letterSpacing="0.12" android:textStyle="bold" android:layout_marginTop="12dp"/>
+                        <EditText android:id="@+id/shipping_details_address2" android:layout_width="match_parent" android:layout_height="48dp" android:layout_marginTop="6dp" android:background="@drawable/custom_input_search" android:hint="Apt, suite, etc." android:inputType="text" android:paddingStart="14dp" android:paddingEnd="14dp" android:textColor="@color/um_text_primary" android:textColorHint="@color/um_text_hint" android:textSize="14sp"/>
+
+                        <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal" android:layout_marginTop="12dp">
+                            <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:orientation="vertical" android:layout_marginEnd="8dp">
+                                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="CITY" android:textColor="@color/um_primary" android:textSize="11sp" android:letterSpacing="0.12" android:textStyle="bold"/>
+                                <EditText android:id="@+id/shipping_details_city" android:layout_width="match_parent" android:layout_height="48dp" android:layout_marginTop="6dp" android:background="@drawable/custom_input_search" android:hint="City" android:inputType="text" android:paddingStart="14dp" android:paddingEnd="14dp" android:textColor="@color/um_text_primary" android:textColorHint="@color/um_text_hint" android:textSize="14sp"/>
+                            </LinearLayout>
+                            <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:orientation="vertical">
+                                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="POST CODE" android:textColor="@color/um_primary" android:textSize="11sp" android:letterSpacing="0.12" android:textStyle="bold"/>
+                                <EditText android:id="@+id/shipping_details_postcode" android:layout_width="match_parent" android:layout_height="48dp" android:layout_marginTop="6dp" android:background="@drawable/custom_input_search" android:hint="10000" android:inputType="number" android:paddingStart="14dp" android:paddingEnd="14dp" android:textColor="@color/um_text_primary" android:textColorHint="@color/um_text_hint" android:textSize="14sp"/>
+                            </LinearLayout>
+                        </LinearLayout>
+
+                        <CheckBox
+                            android:id="@+id/shipping_details_check_billing"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="12dp"
+                            android:checked="true"
+                            android:text="Billing address same as shipping"
+                            android:textColor="@color/um_text_secondary"
+                            android:buttonTint="@color/um_primary" />
+
+                    </LinearLayout>
+
+                </LinearLayout>
+
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- Billing Card (hidden by default) -->
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/billing_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:visibility="gone"
+                app:cardBackgroundColor="@color/um_surface_card"
+                app:strokeColor="@color/um_surface_border"
+                app:strokeWidth="1dp"
+                app:cardElevation="0dp"
+                app:cardCornerRadius="12dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:padding="16dp">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_centerVertical="true"
+                            android:text="Billing Details"
+                            android:textColor="@color/um_text_primary"
+                            android:textSize="15sp"
+                            android:textStyle="bold" />
+
+                        <ImageView
+                            android:id="@+id/billing_layout_btn"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:src="@drawable/keyboard_arrow_down_24px"
+                            android:layout_alignParentEnd="true"
+                            android:layout_centerVertical="true"
+                            android:rotation="180" />
+
+                    </RelativeLayout>
+
+                    <LinearLayout
+                        android:id="@+id/billing_layout_body"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:paddingStart="16dp"
+                        android:paddingEnd="16dp"
+                        android:paddingBottom="16dp"
+                        android:visibility="gone">
+
+                        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="NAME" android:textColor="@color/um_primary" android:textSize="11sp" android:letterSpacing="0.12" android:textStyle="bold" android:layout_marginTop="8dp"/>
+                        <EditText android:id="@+id/billing_details_name" android:layout_width="match_parent" android:layout_height="48dp" android:layout_marginTop="6dp" android:background="@drawable/custom_input_search" android:hint="Your name" android:inputType="text" android:paddingStart="14dp" android:paddingEnd="14dp" android:textColor="@color/um_text_primary" android:textColorHint="@color/um_text_hint" android:textSize="14sp"/>
+                        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="EMAIL" android:textColor="@color/um_primary" android:textSize="11sp" android:letterSpacing="0.12" android:textStyle="bold" android:layout_marginTop="12dp"/>
+                        <EditText android:id="@+id/billing_details_email" android:layout_width="match_parent" android:layout_height="48dp" android:layout_marginTop="6dp" android:background="@drawable/custom_input_search" android:hint="user@example.com" android:inputType="textEmailAddress" android:paddingStart="14dp" android:paddingEnd="14dp" android:textColor="@color/um_text_primary" android:textColorHint="@color/um_text_hint" android:textSize="14sp"/>
+                        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="CONTACT" android:textColor="@color/um_primary" android:textSize="11sp" android:letterSpacing="0.12" android:textStyle="bold" android:layout_marginTop="12dp"/>
+                        <EditText android:id="@+id/billing_details_contact" android:layout_width="match_parent" android:layout_height="48dp" android:layout_marginTop="6dp" android:background="@drawable/custom_input_search" android:hint="+94 xx xxx xxxx" android:inputType="phone" android:paddingStart="14dp" android:paddingEnd="14dp" android:textColor="@color/um_text_primary" android:textColorHint="@color/um_text_hint" android:textSize="14sp"/>
+                        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="ADDRESS LINE 1" android:textColor="@color/um_primary" android:textSize="11sp" android:letterSpacing="0.12" android:textStyle="bold" android:layout_marginTop="12dp"/>
+                        <EditText android:id="@+id/billing_details_address1" android:layout_width="match_parent" android:layout_height="48dp" android:layout_marginTop="6dp" android:background="@drawable/custom_input_search" android:hint="Street address" android:inputType="text" android:paddingStart="14dp" android:paddingEnd="14dp" android:textColor="@color/um_text_primary" android:textColorHint="@color/um_text_hint" android:textSize="14sp"/>
+                        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="ADDRESS LINE 2" android:textColor="@color/um_primary" android:textSize="11sp" android:letterSpacing="0.12" android:textStyle="bold" android:layout_marginTop="12dp"/>
+                        <EditText android:id="@+id/billing_details_address2" android:layout_width="match_parent" android:layout_height="48dp" android:layout_marginTop="6dp" android:background="@drawable/custom_input_search" android:hint="Apt, suite, etc." android:inputType="text" android:paddingStart="14dp" android:paddingEnd="14dp" android:textColor="@color/um_text_primary" android:textColorHint="@color/um_text_hint" android:textSize="14sp"/>
+                        <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal" android:layout_marginTop="12dp">
+                            <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:orientation="vertical" android:layout_marginEnd="8dp">
+                                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="CITY" android:textColor="@color/um_primary" android:textSize="11sp" android:letterSpacing="0.12" android:textStyle="bold"/>
+                                <EditText android:id="@+id/billing_details_city" android:layout_width="match_parent" android:layout_height="48dp" android:layout_marginTop="6dp" android:background="@drawable/custom_input_search" android:hint="City" android:inputType="text" android:paddingStart="14dp" android:paddingEnd="14dp" android:textColor="@color/um_text_primary" android:textColorHint="@color/um_text_hint" android:textSize="14sp"/>
+                            </LinearLayout>
+                            <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:orientation="vertical">
+                                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="POST CODE" android:textColor="@color/um_primary" android:textSize="11sp" android:letterSpacing="0.12" android:textStyle="bold"/>
+                                <EditText android:id="@+id/billing_details_postcode" android:layout_width="match_parent" android:layout_height="48dp" android:layout_marginTop="6dp" android:background="@drawable/custom_input_search" android:hint="10000" android:inputType="number" android:paddingStart="14dp" android:paddingEnd="14dp" android:textColor="@color/um_text_primary" android:textColorHint="@color/um_text_hint" android:textSize="14sp"/>
+                            </LinearLayout>
+                        </LinearLayout>
+
+                    </LinearLayout>
+
+                </LinearLayout>
+
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- Order Summary Card -->
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                app:cardBackgroundColor="@color/um_surface_card"
+                app:strokeColor="@color/um_primary"
+                app:strokeWidth="1dp"
+                app:cardElevation="0dp"
+                app:cardCornerRadius="12dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="16dp">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical">
+
+                        <View android:layout_width="3dp" android:layout_height="18dp" android:background="@color/um_primary" android:layout_marginEnd="10dp"/>
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Order Summary"
+                            android:textColor="@color/um_text_primary"
+                            android:textSize="15sp"
+                            android:textStyle="bold" />
+
+                    </LinearLayout>
+
+                    <View android:layout_width="match_parent" android:layout_height="1dp" android:background="@color/um_surface_border" android:layout_marginTop="12dp" android:layout_marginBottom="12dp"/>
+
+                    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal">
+                        <TextView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:text="Subtotal" android:textColor="@color/um_text_secondary" android:textSize="14sp"/>
+                        <TextView android:id="@+id/checkout_subtotal" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="LKR 0.00" android:textColor="@color/um_text_primary" android:textSize="14sp" android:textStyle="bold"/>
+                    </LinearLayout>
+
+                    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal" android:layout_marginTop="8dp">
+                        <TextView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:text="Shipping" android:textColor="@color/um_text_secondary" android:textSize="14sp"/>
+                        <TextView android:id="@+id/checkout_shipping" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="LKR 0.00" android:textColor="@color/um_text_primary" android:textSize="14sp" android:textStyle="bold"/>
+                    </LinearLayout>
+
+                    <View android:layout_width="match_parent" android:layout_height="1dp" android:background="@color/um_surface_border" android:layout_marginTop="12dp" android:layout_marginBottom="12dp"/>
+
+                    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal">
+                        <TextView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:text="Total" android:textColor="@color/um_text_primary" android:textSize="16sp" android:textStyle="bold"/>
+                        <TextView android:id="@+id/checkout_total" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="LKR 0.00" android:textColor="@color/um_primary" android:textSize="18sp" android:textStyle="bold"/>
+                    </LinearLayout>
+
+                </LinearLayout>
+
+            </com.google.android.material.card.MaterialCardView>
+
+        </LinearLayout>
+
+    </androidx.core.widget.NestedScrollView>
+
+    <!-- Proceed Button -->
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/checkout_btn_proceed"
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
+        android:layout_alignParentBottom="true"
+        android:layout_marginStart="12dp"
+        android:layout_marginEnd="12dp"
+        android:layout_marginBottom="12dp"
+        android:text="Proceed to Payment"
+        android:textColor="@color/um_text_on_primary"
+        android:textStyle="bold"
+        android:textSize="15sp"
+        app:backgroundTint="@color/um_primary"
+        app:cornerRadius="8dp" />
+
+</RelativeLayout>

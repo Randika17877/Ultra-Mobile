@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/um_background"
+    android:orientation="vertical"
+    tools:context=".fragment.SearchFragment">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:padding="16dp"
+        android:gravity="center_vertical">
+
+        <View android:layout_width="3dp" android:layout_height="18dp" android:background="@color/um_primary" android:layout_marginEnd="10dp"/>
+
+        <TextView
+            android:id="@+id/search_results_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Search Results"
+            android:textColor="@color/um_text_primary"
+            android:textSize="18sp"
+            android:textStyle="bold" />
+
+    </LinearLayout>
+
+    <View android:layout_width="match_parent" android:layout_height="1dp" android:background="@color/um_surface_border"/>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/search_recycler"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:padding="6dp"
+            android:clipToPadding="false" />
+
+        <LinearLayout
+            android:id="@+id/layout_no_results"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:orientation="vertical"
+            android:gravity="center"
+            android:visibility="gone">
+
+            <ImageView
+                android:layout_width="80dp"
+                android:layout_height="80dp"
+                android:src="@drawable/search_24px"
+                app:tint="@color/um_text_hint" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:text="No products found"
+                android:textColor="@color/um_text_hint"
+                android:textSize="16sp" />
+        </LinearLayout>
+
+        <ProgressBar
+            android:id="@+id/search_progress"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:visibility="gone" />
+
+    </FrameLayout>
+
+</LinearLayout>
