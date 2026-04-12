@@ -1,16 +1,16 @@
 package lk.randika.ultramobile.fragment;
 
 import android.os.Bundle;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
-
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
 
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -28,18 +28,11 @@ import lk.randika.ultramobile.model.Product;
 public class HomeFragment extends Fragment {
 
     private FragmentHomeBinding binding;
-
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-
-    }
+    private FirebaseFirestore db;
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-
         binding = FragmentHomeBinding.inflate(inflater, container, false);
         return binding.getRoot();
     }
@@ -47,27 +40,21 @@ public class HomeFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        db = FirebaseFirestore.getInstance();
 
-        loadCategories();
+        setupCategories();
         loadTopSellProduct();
         loadAllProducts();
-
     }
 
-    private void loadCategories() {
-        FirebaseFirestore db = FirebaseFirestore.getInstance();
-        db.collection("categories")
-                .limit(6)
-                .get()
+    private void setupCategories() {
+        binding.categoryRecyclerHome.setLayoutManager(
+                new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
+
+        db.collection("categories").get()
                 .addOnSuccessListener(qds -> {
                     if (!qds.isEmpty()) {
                         List<Category> categories = qds.toObjects(Category.class);
-
-                        LinearLayoutManager layoutManager =
-                                new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
-
-                        binding.homeCategorySection.itemSectionContainer.setLayoutManager(layoutManager);
-
                         CategoryAdapter adapter = new CategoryAdapter(categories, category -> {
                             Bundle bundle = new Bundle();
                             bundle.putString("categoryId", category.getCategoryId());
@@ -80,93 +67,68 @@ public class HomeFragment extends Fragment {
                                     .addToBackStack(null)
                                     .commit();
                         });
-
-                        binding.homeCategorySection.itemSectionTitle.setText("Categories");
-                        binding.homeCategorySection.itemSectionSeeAll.setVisibility(View.VISIBLE);
-                        binding.homeCategorySection.itemSectionSeeAll.setOnClickListener(v -> {
-                            getParentFragmentManager().beginTransaction()
-                                    .replace(R.id.fragment_container, new CategoryFragment())
-                                    .addToBackStack(null)
-                                    .commit();
-                        });
-                        binding.homeCategorySection.itemSectionContainer.setAdapter(adapter);
+                        binding.categoryRecyclerHome.setAdapter(adapter);
                     }
                 });
     }
 
     private void loadTopSellProduct() {
-
-        FirebaseFirestore db = FirebaseFirestore.getInstance();
         db.collection("products")
                 .limit(10)
                 .get()
-                .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
-                    @Override
-                    public void onSuccess(QuerySnapshot qds) {
-                        if (!qds.isEmpty()) {
-                            List<Product> products = qds.toObjects(Product.class);
+                .addOnSuccessListener(qds -> {
+                    if (!qds.isEmpty()) {
+                        List<Product> products = qds.toObjects(Product.class);
 
+                        LinearLayoutManager layoutManager =
+                                new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
 
-                            LinearLayoutManager layoutManager =
-                                    new LinearLayoutManager(getContext(),LinearLayoutManager.HORIZONTAL, false);
+                        binding.homeTopSellSection.itemSectionContainer.setLayoutManager(layoutManager);
+                        binding.homeTopSellSection.itemSectionTitle.setText("Hot Deals");
 
-                            binding.homeTopSellSection.itemSectionContainer.setLayoutManager(layoutManager);
+                        SectionAdapter adapter = new SectionAdapter(products, product -> {
+                            navigateToDetails(product.getProductId());
+                        });
 
-
-                            SectionAdapter adapter = new SectionAdapter(products, product -> {
-                                Bundle bundle = new Bundle();
-                                bundle.putString("productId", product.getProductId());
-
-                                ProductDetailsFragment productDetailsFragment = new ProductDetailsFragment();
-                                productDetailsFragment.setArguments(bundle);
-
-                                getParentFragmentManager().beginTransaction()
-                                        .replace(R.id.fragment_container, productDetailsFragment)
-                                        .addToBackStack(null)
-                                        .commit();
-                            });
-
-                            binding.homeTopSellSection.itemSectionTitle.setText("Top Selling Products");
-                            binding.homeTopSellSection.itemSectionContainer.setAdapter(adapter);
-
-                        }
+                        binding.homeTopSellSection.itemSectionContainer.setAdapter(adapter);
                     }
                 });
-
     }
 
     private void loadAllProducts() {
-        FirebaseFirestore db = FirebaseFirestore.getInstance();
         db.collection("products")
                 .get()
-                .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
-                    @Override
-                    public void onSuccess(QuerySnapshot qds) {
-                        if (!qds.isEmpty()) {
-                            List<Product> products = qds.toObjects(Product.class);
+                .addOnSuccessListener(qds -> {
+                    if (!qds.isEmpty()) {
+                        List<Product> products = qds.toObjects(Product.class);
 
-                            GridLayoutManager layoutManager =
-                                    new GridLayoutManager(getContext(), 2);
+                        GridLayoutManager layoutManager = new GridLayoutManager(getContext(), 2);
+                        // Make sure the grid is not scrollable within NestedScrollView if it's supposed to expand
+                        // But NestedScrollView handles child heights usually. 
+                        // However, for better performance with large lists, consider adding android:nestedScrollingEnabled="false"
+                        binding.homeAllProductsSection.itemSectionContainer.setLayoutManager(layoutManager);
+                        binding.homeAllProductsSection.itemSectionContainer.setNestedScrollingEnabled(false);
+                        binding.homeAllProductsSection.itemSectionTitle.setText("Recently Added");
 
-                            binding.homeAllProductsSection.itemSectionContainer.setLayoutManager(layoutManager);
+                        SectionAdapter adapter = new SectionAdapter(products, product -> {
+                            navigateToDetails(product.getProductId());
+                        });
 
-                            SectionAdapter adapter = new SectionAdapter(products, product -> {
-                                Bundle bundle = new Bundle();
-                                bundle.putString("productId", product.getProductId());
-
-                                ProductDetailsFragment productDetailsFragment = new ProductDetailsFragment();
-                                productDetailsFragment.setArguments(bundle);
-
-                                getParentFragmentManager().beginTransaction()
-                                        .replace(R.id.fragment_container, productDetailsFragment)
-                                        .addToBackStack(null)
-                                        .commit();
-                            });
-
-                            binding.homeAllProductsSection.itemSectionTitle.setText("All Products");
-                            binding.homeAllProductsSection.itemSectionContainer.setAdapter(adapter);
-                        }
+                        binding.homeAllProductsSection.itemSectionContainer.setAdapter(adapter);
                     }
                 });
+    }
+
+    private void navigateToDetails(String productId) {
+        Bundle bundle = new Bundle();
+        bundle.putString("productId", productId);
+
+        ProductDetailsFragment productDetailsFragment = new ProductDetailsFragment();
+        productDetailsFragment.setArguments(bundle);
+
+        getParentFragmentManager().beginTransaction()
+                .replace(R.id.fragment_container, productDetailsFragment)
+                .addToBackStack(null)
+                .commit();
     }
 }

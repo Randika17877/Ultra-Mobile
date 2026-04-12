@@ -19,10 +19,10 @@ public class Product {
     private String description;
     private double price;
     private String categoryId;
-
+    
     @lombok.Getter(lombok.AccessLevel.NONE)
     private Object images;
-
+    
     private int stockCount;
     private boolean status;
     private float rating;

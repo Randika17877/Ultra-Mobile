@@ -15,6 +15,8 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import lk.randika.ultramobile.R;
@@ -29,6 +31,11 @@ public class SearchFragment extends Fragment {
     private FirebaseFirestore db;
     private List<Product> allProducts = new ArrayList<>();
     private ListingAdapter adapter;
+
+    // Filter states
+    private float minPrice = 0;
+    private float maxPrice = 500000;
+    private int sortType = 0; // 0: Default, 1: Price Asc, 2: Price Desc
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -53,7 +60,36 @@ public class SearchFragment extends Fragment {
         binding.searchRecycler.setLayoutManager(new GridLayoutManager(getContext(), 2));
         setupRecyclerView(new ArrayList<>());
 
+        setupFilterListeners();
         loadAllProductsAndFilter();
+    }
+
+    private void setupFilterListeners() {
+        binding.btnFilterToggle.setOnClickListener(v -> {
+            boolean isVisible = binding.filterContainer.getVisibility() == View.VISIBLE;
+            binding.filterContainer.setVisibility(isVisible ? View.GONE : View.VISIBLE);
+        });
+
+        binding.priceRangeSlider.addOnChangeListener((slider, value, fromUser) -> {
+            List<Float> values = slider.getValues();
+            minPrice = values.get(0);
+            maxPrice = values.get(1);
+            binding.txtMinPrice.setText("Min: LKR " + String.format("%.0f", minPrice));
+            binding.txtMaxPrice.setText("Max: LKR " + String.format("%.0f", maxPrice));
+        });
+
+        binding.btnApplyFilters.setOnClickListener(v -> {
+            int checkedId = binding.sortChipGroup.getCheckedChipId();
+            if (checkedId == R.id.chip_sort_price_asc) {
+                sortType = 1;
+            } else if (checkedId == R.id.chip_sort_price_desc) {
+                sortType = 2;
+            } else {
+                sortType = 0;
+            }
+            binding.filterContainer.setVisibility(View.GONE);
+            performSearch(searchQuery);
+        });
     }
 
     private void loadAllProductsAndFilter() {
@@ -79,18 +115,28 @@ public class SearchFragment extends Fragment {
     public void performSearch(String query) {
         this.searchQuery = query;
         if (binding == null) return;
-
+        
         binding.searchProgress.setVisibility(View.GONE);
-
+        
         List<Product> filteredList = new ArrayList<>();
-        if (query != null && !query.isEmpty()) {
-            for (Product p : allProducts) {
-                if (p.getTitle() != null && p.getTitle().toLowerCase().contains(query.toLowerCase())) {
-                    filteredList.add(p);
-                }
+        
+        // 1. Text Search & Price Filter
+        for (Product p : allProducts) {
+            boolean matchesQuery = (query == null || query.isEmpty()) || 
+                                 (p.getTitle() != null && p.getTitle().toLowerCase().contains(query.toLowerCase()));
+            
+            boolean matchesPrice = p.getPrice() >= minPrice && p.getPrice() <= maxPrice;
+
+            if (matchesQuery && matchesPrice) {
+                filteredList.add(p);
             }
-        } else {
-            filteredList.addAll(allProducts);
+        }
+
+        // 2. Sorting
+        if (sortType == 1) {
+            Collections.sort(filteredList, Comparator.comparingDouble(Product::getPrice));
+        } else if (sortType == 2) {
+            Collections.sort(filteredList, (p1, p2) -> Double.compare(p2.getPrice(), p1.getPrice()));
         }
 
         if (adapter != null) {
@@ -116,7 +162,7 @@ public class SearchFragment extends Fragment {
                     .replace(R.id.fragment_container, productDetailsFragment)
                     .addToBackStack(null)
                     .commit();
-        });
+        }, true);
         binding.searchRecycler.setAdapter(adapter);
     }
 

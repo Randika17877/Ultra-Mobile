@@ -15,7 +15,6 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
-import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
@@ -57,14 +56,13 @@ import lk.randika.ultramobile.fragment.ListingFragment;
 import lk.randika.ultramobile.fragment.OrdersFragment;
 import lk.randika.ultramobile.fragment.ProfileFragment;
 import lk.randika.ultramobile.fragment.SearchFragment;
-import lk.randika.ultramobile.fragment.NotificationFragment;
 import lk.randika.ultramobile.fragment.SettingsFragment;
 import lk.randika.ultramobile.fragment.WishlistFragment;
 import lk.randika.ultramobile.model.User;
 
 public class MainActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener, BottomNavigationView.OnItemSelectedListener,
-        SensorEventListener {
+        implements NavigationView.OnNavigationItemSelectedListener, BottomNavigationView.OnItemSelectedListener, SensorEventListener {
+
 
     private ActivityMainBinding binding;
     private SideNavHeaderBinding sideNavHeaderBinding;
@@ -98,8 +96,8 @@ public class MainActivity extends AppCompatActivity
 
         setSupportActionBar(toolbar);
 
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawerLayout, toolbar, R.string.drawer_open,
-                R.string.drawer_close);
+        ActionBarDrawerToggle toggle =
+                new ActionBarDrawerToggle(this, drawerLayout, toolbar, R.string.drawer_open, R.string.drawer_close);
         drawerLayout.addDrawerListener(toggle);
 
         toggle.syncState();
@@ -123,8 +121,7 @@ public class MainActivity extends AppCompatActivity
         // Search functionality
         binding.textInputSearch.addTextChangedListener(new TextWatcher() {
             @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-            }
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
@@ -144,8 +141,7 @@ public class MainActivity extends AppCompatActivity
             }
 
             @Override
-            public void afterTextChanged(Editable s) {
-            }
+            public void afterTextChanged(Editable s) {}
         });
 
         binding.textInputSearch.setOnEditorActionListener((v, actionId, event) -> {
@@ -158,6 +154,7 @@ public class MainActivity extends AppCompatActivity
             }
             return false;
         });
+
 
         navigationView.setNavigationItemSelectedListener(this);
         bottomNavigationView.setOnItemSelectedListener(this);
@@ -177,7 +174,8 @@ public class MainActivity extends AppCompatActivity
         firebaseAuth = FirebaseAuth.getInstance();
         firebaseFirestore = FirebaseFirestore.getInstance();
 
-        // check and load user details
+
+        //check and load user details
         FirebaseUser currentUser = firebaseAuth.getCurrentUser();
         if (currentUser != null) {
             updateUserDetails(currentUser.getUid());
@@ -207,16 +205,14 @@ public class MainActivity extends AppCompatActivity
                             sideNavHeaderBinding.headerUserEmail.setText(user.getEmail());
 
                             if (user.getProfilePicUrl() != null && !user.getProfilePicUrl().isEmpty()) {
-                                FirebaseStorage.getInstance().getReference("profile-images/" + user.getProfilePicUrl())
-                                        .getDownloadUrl()
+                                FirebaseStorage.getInstance().getReference("profile-images/" + user.getProfilePicUrl()).getDownloadUrl()
                                         .addOnSuccessListener(uri -> {
                                             Glide.with(MainActivity.this)
                                                     .load(uri)
                                                     .circleCrop()
                                                     .into(sideNavHeaderBinding.headerProfilePic);
                                         }).addOnFailureListener(e -> {
-                                            sideNavHeaderBinding.headerProfilePic
-                                                    .setImageResource(R.drawable.person_24px);
+                                            sideNavHeaderBinding.headerProfilePic.setImageResource(R.drawable.person_24px);
                                         });
                             } else {
                                 sideNavHeaderBinding.headerProfilePic.setImageResource(R.drawable.person_24px);
@@ -243,9 +239,8 @@ public class MainActivity extends AppCompatActivity
 
     private void requestNotificationPermission() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            if (ContextCompat.checkSelfPermission(this,
-                    Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) {
-                requestPermissions(new String[] { Manifest.permission.POST_NOTIFICATIONS }, 101);
+            if (ContextCompat.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) {
+                requestPermissions(new String[]{Manifest.permission.POST_NOTIFICATIONS}, 101);
             }
         }
     }
@@ -270,13 +265,13 @@ public class MainActivity extends AppCompatActivity
     }
 
     private void updateSearchVisibility(Fragment fragment) {
-        if (fragment instanceof HomeFragment || fragment instanceof CategoryFragment
-                || fragment instanceof ListingFragment || fragment instanceof SearchFragment) {
+        if (fragment instanceof HomeFragment || fragment instanceof CategoryFragment || fragment instanceof ListingFragment || fragment instanceof SearchFragment) {
             binding.textInputSearch.setVisibility(View.VISIBLE);
         } else {
             binding.textInputSearch.setVisibility(View.GONE);
         }
     }
+
 
     ActivityResultLauncher<Intent> activityResultLauncher = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(), result -> {
@@ -295,13 +290,14 @@ public class MainActivity extends AppCompatActivity
                                             .document(firebaseAuth.getUid())
                                             .update("profilePicUrl", imageId)
                                             .addOnSuccessListener(aVoid -> {
-                                                Toast.makeText(MainActivity.this, "Profile image changed!",
-                                                        Toast.LENGTH_SHORT).show();
+                                                Toast.makeText(MainActivity.this, "Profile image changed!", Toast.LENGTH_SHORT).show();
                                             });
                                 });
                     }
                 }
-            });
+            }
+    );
+
 
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
@@ -309,8 +305,7 @@ public class MainActivity extends AppCompatActivity
         Fragment currentFragment = getSupportFragmentManager().findFragmentById(R.id.fragment_container);
 
         if (itemId == R.id.side_nav_home || itemId == R.id.bottom_nav_home) {
-            if (!(currentFragment instanceof HomeFragment))
-                loadFragment(new HomeFragment());
+            if (!(currentFragment instanceof HomeFragment)) loadFragment(new HomeFragment());
             navigationView.setCheckedItem(R.id.side_nav_home);
             bottomNavigationView.getMenu().findItem(R.id.bottom_nav_home).setChecked(true);
         } else if (itemId == R.id.side_nav_profile || itemId == R.id.bottom_nav_profile) {
@@ -319,17 +314,14 @@ public class MainActivity extends AppCompatActivity
                 finish();
                 return false;
             }
-            if (!(currentFragment instanceof ProfileFragment))
-                loadFragment(new ProfileFragment());
+            if (!(currentFragment instanceof ProfileFragment)) loadFragment(new ProfileFragment());
             navigationView.setCheckedItem(R.id.side_nav_profile);
             bottomNavigationView.getMenu().findItem(R.id.bottom_nav_profile).setChecked(true);
         } else if (itemId == R.id.side_nav_orders) {
-            if (!(currentFragment instanceof OrdersFragment))
-                loadFragment(new OrdersFragment());
+            if (!(currentFragment instanceof OrdersFragment)) loadFragment(new OrdersFragment());
             navigationView.setCheckedItem(R.id.side_nav_orders);
         } else if (itemId == R.id.side_nav_wishlist) {
-            if (!(currentFragment instanceof WishlistFragment))
-                loadFragment(new WishlistFragment());
+            if (!(currentFragment instanceof WishlistFragment)) loadFragment(new WishlistFragment());
             navigationView.setCheckedItem(R.id.side_nav_wishlist);
         } else if (itemId == R.id.side_nav_cart || itemId == R.id.bottom_nav_cart) {
             if (firebaseAuth.getCurrentUser() == null) {
@@ -337,17 +329,14 @@ public class MainActivity extends AppCompatActivity
                 finish();
                 return false;
             }
-            if (!(currentFragment instanceof CartFragment))
-                loadFragment(new CartFragment());
+            if (!(currentFragment instanceof CartFragment)) loadFragment(new CartFragment());
             navigationView.setCheckedItem(R.id.side_nav_cart);
             bottomNavigationView.getMenu().findItem(R.id.bottom_nav_cart).setChecked(true);
         } else if (itemId == R.id.side_nav_settings) {
-            if (!(currentFragment instanceof SettingsFragment))
-                loadFragment(new SettingsFragment());
+            if (!(currentFragment instanceof SettingsFragment)) loadFragment(new SettingsFragment());
             navigationView.setCheckedItem(R.id.side_nav_settings);
         } else if (itemId == R.id.bottom_nav_category) {
-            if (!(currentFragment instanceof CategoryFragment))
-                loadFragment(new CategoryFragment());
+            if (!(currentFragment instanceof CategoryFragment)) loadFragment(new CategoryFragment());
             bottomNavigationView.getMenu().findItem(R.id.bottom_nav_category).setChecked(true);
         } else if (itemId == R.id.side_nav_login) {
             startActivity(new Intent(MainActivity.this, SignInActivity.class));
@@ -371,28 +360,6 @@ public class MainActivity extends AppCompatActivity
                 .replace(R.id.fragment_container, fragment)
                 .addToBackStack(null)
                 .commit();
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.toolbar_menu, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        if (item.getItemId() == R.id.action_notifications) {
-            if (firebaseAuth.getCurrentUser() == null) {
-                startActivity(new Intent(MainActivity.this, SignInActivity.class));
-            } else {
-                Fragment currentFragment = getSupportFragmentManager().findFragmentById(R.id.fragment_container);
-                if (!(currentFragment instanceof NotificationFragment)) {
-                    loadFragment(new NotificationFragment());
-                }
-            }
-            return true;
-        }
-        return super.onOptionsItemSelected(item);
     }
 
     @Override

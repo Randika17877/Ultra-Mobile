@@ -55,6 +55,7 @@ public class ProductDetailsFragment extends Fragment {
     private boolean isInWishlist = false;
     private DatabaseHelper dbHelper;
 
+    // Track attribute groups for dynamic selection
     private Map<String, ChipGroup> attributeGroups = new HashMap<>();
 
     @Override
@@ -76,8 +77,10 @@ public class ProductDetailsFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        // Hide main bottom navigation for an immersive details view
         getActivity().findViewById(R.id.bottom_navigation_view).setVisibility(View.GONE);
 
+        // Custom back button handling
         getActivity().getOnBackPressedDispatcher().addCallback(getViewLifecycleOwner(), new OnBackPressedCallback(true) {
             @Override
             public void handleOnBackPressed() {
@@ -86,7 +89,7 @@ public class ProductDetailsFragment extends Fragment {
         });
 
 
-        // Load Product Details
+        // Fetch and display detailed product information from Firestore
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         db.collection("products").whereEqualTo("productId", productId).get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
             @Override
@@ -94,29 +97,28 @@ public class ProductDetailsFragment extends Fragment {
                 if (!qds.isEmpty()) {
                     Product product = qds.getDocuments().get(0).toObject(Product.class);
 
+                    // Setup Image Slider with dots indicator
                     ProductSliderAdapter adapter = new ProductSliderAdapter(product.getImages());
                     binding.productImageSlider.setAdapter(adapter);
-
                     binding.dotsIndicator.attachTo(binding.productImageSlider);
 
+                    // Set basic info
                     binding.productDetailsTitle.setText(product.getTitle());
-
                     binding.productDetailsRating.setRating(product.getRating());
-
+                    binding.productDetailsRatingText.setText("(" + product.getRating() + ")");
                     binding.productDetailsPrice.setText("LKR " + product.getPrice());
+                    binding.productDetailsDescription.setText(product.getDescription());
 
+                    // Stock management
                     binding.productDetailsAvbQty.setText(String.valueOf(product.getStockCount()));
                     avbQuantity = product.getStockCount();
 
+                    // Dynamically render attributes (colors, sizes, etc.)
                     if (product.getAttributes() != null) {
-
                         product.getAttributes().forEach(attribute -> {
                             renderAttribute(attribute, binding.productDetailsAttributeContainer);
-
                         });
-
                     }
-
                 }
             }
         });
@@ -248,7 +250,7 @@ public class ProductDetailsFragment extends Fragment {
                         getParentFragmentManager().beginTransaction().replace(R.id.fragment_container, productDetailsFragment).addToBackStack(null).commit();
                     });
 
-                    binding.productDetailsTopSellSection.itemSectionTitle.setText("Top Selling Products");
+                    binding.productDetailsTopSellSection.itemSectionTitle.setText("Related Products");
                     binding.productDetailsTopSellSection.itemSectionContainer.setAdapter(adapter);
 
                 }
@@ -257,54 +259,71 @@ public class ProductDetailsFragment extends Fragment {
 
     }
 
+    /**
+     * Renders product attributes (e.g., Color chips or regular text chips)
+     */
     private void renderAttribute(Product.Attribute attribute, ViewGroup container) {
         LinearLayout row = new LinearLayout(getContext());
-        row.setOrientation(LinearLayout.HORIZONTAL);
-        row.setPadding(0, 8, 0, 8);
+        row.setOrientation(LinearLayout.VERTICAL);
+        row.setPadding(0, 16, 0, 16);
 
-
-        //Create Label
+        // Attribute Name Label
         TextView label = new TextView(getContext());
-        LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(120, ViewGroup.LayoutParams.WRAP_CONTENT);
-
-        layoutParams.gravity = Gravity.CENTER_VERTICAL;
-        label.setLayoutParams(layoutParams);
-
-        label.setText(attribute.getName());
-        label.setTextColor(getResources().getColor(R.color.um_text_primary));
-
+        label.setText(attribute.getName().toUpperCase());
+        label.setTextColor(getResources().getColor(R.color.um_text_secondary));
+        label.setTextSize(12);
+        label.setLetterSpacing(0.1f);
+        label.setTypeface(label.getTypeface(), android.graphics.Typeface.BOLD);
+        label.setPadding(0, 0, 0, 12);
         row.addView(label);
 
-        //Create Options
+        // Attribute Options (Chips)
         ChipGroup group = new ChipGroup(getContext());
-
-
         group.setSelectionRequired(true);
         group.setSingleSelection(true);
+        group.setChipSpacingHorizontal(12);
 
         attribute.getValues().forEach(value -> {
             Chip chip = new Chip(getContext());
             chip.setId(View.generateViewId());
             chip.setCheckable(true);
-            chip.setChipStrokeWidth(3f);
-
             chip.setTag(value);
 
+            // Apply different styles based on attribute type
             if ("color".equals(attribute.getType())) {
+                // Color circle chip
                 chip.setChipBackgroundColor(ColorStateList.valueOf(Color.parseColor(value)));
+                chip.setText("");
+                chip.setChipIconVisible(false);
+                chip.setChipMinHeight(80);
+                chip.setChipStartPadding(30);
+                chip.setChipEndPadding(30);
+                // Custom stroke for selection visibility
+                chip.setChipStrokeColor(ColorStateList.valueOf(getResources().getColor(R.color.um_primary)));
+                chip.setChipStrokeWidth(0f);
+                chip.setOnCheckedChangeListener((buttonView, isChecked) -> {
+                    chip.setChipStrokeWidth(isChecked ? 4f : 0f);
+                });
             } else {
+                // Regular text chip for Size, Storage, etc.
                 chip.setText(value);
+                chip.setTextColor(getResources().getColor(R.color.um_text_primary));
+                chip.setChipBackgroundColor(ColorStateList.valueOf(getResources().getColor(R.color.um_surface_elevated)));
+                chip.setChipStrokeColor(ColorStateList.valueOf(getResources().getColor(R.color.um_surface_border)));
+                chip.setChipStrokeWidth(1f);
+                chip.setOnCheckedChangeListener((buttonView, isChecked) -> {
+                    chip.setChipBackgroundColor(ColorStateList.valueOf(isChecked ?
+                        getResources().getColor(R.color.um_primary_dim) :
+                        getResources().getColor(R.color.um_surface_elevated)));
+                });
             }
 
             group.addView(chip);
         });
 
         row.addView(group);
-
         container.addView(row);
-
         attributeGroups.put(attribute.getName(), group);
-
     }
 
 
@@ -337,12 +356,14 @@ public class ProductDetailsFragment extends Fragment {
     @Override
     public void onStop() {
         super.onStop();
+        // Restore bottom navigation when leaving details
         getActivity().findViewById(R.id.bottom_navigation_view).setVisibility(View.VISIBLE);
     }
 
     @Override
     public void onResume() {
         super.onResume();
+        // Re-hide bottom navigation if returning to this fragment
         getActivity().findViewById(R.id.bottom_navigation_view).setVisibility(View.GONE);
     }
 }
