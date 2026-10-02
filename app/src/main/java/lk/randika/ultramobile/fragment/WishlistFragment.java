@@ -62,7 +62,7 @@ public class WishlistFragment extends Fragment {
                     .replace(R.id.fragment_container, fragment)
                     .addToBackStack(null)
                     .commit();
-        });
+        }, true);
 
         binding.wishlistRecycler.setLayoutManager(new GridLayoutManager(getContext(), 2));
         binding.wishlistRecycler.setAdapter(adapter);

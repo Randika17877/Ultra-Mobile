@@ -22,6 +22,7 @@ import java.util.List;
 import java.util.Locale;
 
 import lk.randika.ultramobile.R;
+import lk.randika.ultramobile.helper.ImageHelper;
 import lk.randika.ultramobile.model.CartItem;
 import lk.randika.ultramobile.model.Product;
 
@@ -74,10 +75,11 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.ViewHolder> {
                     holder.productPrice.setText(String.format(Locale.US, "LKR %,.2f", product.getPrice()));
                     holder.productQuantity.setText(String.valueOf(cartItem.getQuantity()));
 
-                    Glide.with(holder.itemView.getContext())
-                            .load(product.getImages().get(0))
-                            .centerCrop()
-                            .into(holder.productImage);
+                    if (product.getImages() != null && !product.getImages().isEmpty()) {
+                        ImageHelper.loadImage(holder.itemView.getContext(), product.getImages().get(0), holder.productImage);
+                    } else {
+                        holder.productImage.setImageResource(R.drawable.ic_launcher_background);
+                    }
 
 
                     holder.btnPlus.setOnClickListener(v -> {

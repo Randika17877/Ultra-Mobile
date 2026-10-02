@@ -37,6 +37,7 @@ import java.util.UUID;
 
 import lk.randika.ultramobile.R;
 import lk.randika.ultramobile.databinding.FragmentEditProfileBinding;
+import lk.randika.ultramobile.helper.ImageHelper;
 import lk.randika.ultramobile.model.User;
 
 public class EditProfileFragment extends Fragment {
@@ -111,18 +112,11 @@ public class EditProfileFragment extends Fragment {
                 binding.editProfileEmail.setText(user.getEmail());
                 currentProfilePicUrl = user.getProfilePicUrl();
 
-                if (currentProfilePicUrl != null && !currentProfilePicUrl.isEmpty()) {
-                    storage.getReference("profile-images/" + currentProfilePicUrl).getDownloadUrl()
-                            .addOnSuccessListener(uri -> {
-                                if (isAdded()) {
-                                    Glide.with(this)
-                                            .load(uri)
-                                            .circleCrop()
-                                            .placeholder(R.drawable.person_24px)
-                                            .into(binding.editProfilePic);
-                                }
-                            });
+                String picUrl = currentProfilePicUrl;
+                if (picUrl != null && !picUrl.startsWith("profile-images/") && !picUrl.startsWith("http://") && !picUrl.startsWith("https://") && !picUrl.startsWith("gs://")) {
+                    picUrl = "profile-images/" + picUrl;
                 }
+                ImageHelper.loadImage(getContext(), picUrl, binding.editProfilePic, R.drawable.person_24px, R.drawable.person_24px);
             }
         });
     }

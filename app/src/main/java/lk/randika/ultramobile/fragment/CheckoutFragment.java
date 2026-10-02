@@ -155,7 +155,7 @@ public class CheckoutFragment extends Fragment {
                 req.getCustomer().getAddress().setCity(binding.shippingDetailsCity.getText().toString());
                 req.getCustomer().getAddress().setCountry("Sri Lanka");
 
-//                req.setNotifyUrl("https://eshop.requestcatcher.com/");
+                req.setNotifyUrl("https://example.com/notify");
 
                 Intent intent = new Intent(getActivity(), PHMainActivity.class);
                 intent.putExtra(PHConstants.INTENT_EXTRA_DATA, req);

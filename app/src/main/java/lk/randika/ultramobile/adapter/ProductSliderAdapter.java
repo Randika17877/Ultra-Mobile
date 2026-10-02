@@ -14,6 +14,7 @@ import com.bumptech.glide.Glide;
 import java.util.List;
 
 import lk.randika.ultramobile.R;
+import lk.randika.ultramobile.helper.ImageHelper;
 
 public class ProductSliderAdapter extends RecyclerView.Adapter<ProductSliderAdapter.ProductSliderViewHolder> {
 
@@ -33,10 +34,7 @@ public class ProductSliderAdapter extends RecyclerView.Adapter<ProductSliderAdap
 
     @Override
     public void onBindViewHolder(@NonNull ProductSliderViewHolder holder, int position) {
-        Glide.with(holder.itemView.getContext())
-                .load(images.get(position))
-                .centerCrop()
-                .into(holder.imageView);
+        ImageHelper.loadImage(holder.itemView.getContext(), images.get(position), holder.imageView);
     }
 
     @Override

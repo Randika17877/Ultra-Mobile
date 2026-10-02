@@ -22,6 +22,7 @@ import com.google.firebase.storage.FirebaseStorage;
 import lk.randika.ultramobile.R;
 import lk.randika.ultramobile.activity.SignInActivity;
 import lk.randika.ultramobile.databinding.FragmentProfileBinding;
+import lk.randika.ultramobile.helper.ImageHelper;
 import lk.randika.ultramobile.model.User;
 
 public class ProfileFragment extends Fragment {
@@ -62,23 +63,11 @@ public class ProfileFragment extends Fragment {
                             binding.profileName.setText(user.getName());
                             binding.profileEmail.setText(user.getEmail());
 
-                            if (user.getProfilePicUrl() != null && !user.getProfilePicUrl().isEmpty()) {
-                                FirebaseStorage.getInstance().getReference("profile-images/" + user.getProfilePicUrl())
-                                        .getDownloadUrl()
-                                        .addOnSuccessListener(uri -> {
-                                            if (isAdded()) {
-                                                Glide.with(this)
-                                                        .load(uri)
-                                                        .circleCrop()
-                                                        .placeholder(R.drawable.person_24px)
-                                                        .into(binding.profilePic);
-                                            }
-                                        }).addOnFailureListener(e -> {
-                                            Log.e("ProfileFragment", "Error loading image: " + e.getMessage());
-                                        });
-                            } else {
-                                binding.profilePic.setImageResource(R.drawable.person_24px);
+                            String picUrl = user.getProfilePicUrl();
+                            if (picUrl != null && !picUrl.startsWith("profile-images/") && !picUrl.startsWith("http://") && !picUrl.startsWith("https://") && !picUrl.startsWith("gs://")) {
+                                picUrl = "profile-images/" + picUrl;
                             }
+                            ImageHelper.loadImage(getContext(), picUrl, binding.profilePic, R.drawable.person_24px, R.drawable.person_24px);
                         }
                     }
                 }).addOnFailureListener(e -> {

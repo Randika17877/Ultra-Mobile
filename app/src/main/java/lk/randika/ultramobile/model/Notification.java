@@ -1,6 +1,7 @@
 package lk.randika.ultramobile.model;
 
 import com.google.firebase.firestore.Exclude;
+import com.google.firebase.firestore.IgnoreExtraProperties;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -11,6 +12,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
+@IgnoreExtraProperties
 public class Notification {
     @Exclude
     private String id;

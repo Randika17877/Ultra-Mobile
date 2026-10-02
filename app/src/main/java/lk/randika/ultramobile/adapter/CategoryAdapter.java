@@ -19,6 +19,7 @@ import com.google.firebase.storage.FirebaseStorage;
 import java.util.List;
 
 import lk.randika.ultramobile.R;
+import lk.randika.ultramobile.helper.ImageHelper;
 import lk.randika.ultramobile.model.Category;
 import lombok.val;
 
@@ -48,22 +49,7 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.ViewHo
         Category category = categories.get(position);
         holder.categoryName.setText(category.getName());
 
-        if (category.getImageUrl() != null && !category.getImageUrl().isEmpty()) {
-            storage.getReference(category.getImageUrl())
-                    .getDownloadUrl()
-                    .addOnSuccessListener(uri -> {
-
-                        //Log.i("LoadImages",uri.toString());
-
-                        Glide.with(holder.itemView.getContext())
-                                .load(uri)
-                                .centerCrop()
-                                .into(holder.categoryImage);
-                    });
-        } else {
-            // Optional: set a placeholder image
-            holder.categoryImage.setImageResource(R.drawable.list_24px); 
-        }
+        ImageHelper.loadImage(holder.itemView.getContext(), category.getImageUrl(), holder.categoryImage, R.drawable.list_24px, R.drawable.list_24px);
 
 
         holder.itemView.setOnClickListener(v -> {

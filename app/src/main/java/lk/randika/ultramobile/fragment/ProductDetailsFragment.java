@@ -292,8 +292,9 @@ public class ProductDetailsFragment extends Fragment {
             // Apply different styles based on attribute type
             if ("color".equals(attribute.getType())) {
                 // Color circle chip
-                chip.setChipBackgroundColor(ColorStateList.valueOf(Color.parseColor(value)));
+                chip.setChipBackgroundColor(ColorStateList.valueOf(safeParseColor(value)));
                 chip.setText("");
+                chip.setContentDescription(value);
                 chip.setChipIconVisible(false);
                 chip.setChipMinHeight(80);
                 chip.setChipStartPadding(30);
@@ -350,6 +351,65 @@ public class ProductDetailsFragment extends Fragment {
 
 
         return attributes;
+    }
+
+    private int safeParseColor(String colorStr) {
+        if (colorStr == null) return Color.GRAY;
+        colorStr = colorStr.trim();
+        if (colorStr.isEmpty()) return Color.GRAY;
+
+        try {
+            return Color.parseColor(colorStr);
+        } catch (IllegalArgumentException ignored) {}
+
+        if (!colorStr.startsWith("#")) {
+            try {
+                return Color.parseColor("#" + colorStr);
+            } catch (IllegalArgumentException ignored) {}
+        }
+
+        switch (colorStr.toLowerCase()) {
+            case "black": return Color.BLACK;
+            case "darkgray":
+            case "dark grey":
+            case "space gray":
+            case "space grey":
+            case "graphite":
+                return Color.DKGRAY;
+            case "gray":
+            case "grey":
+            case "silver":
+                return Color.GRAY;
+            case "lightgray":
+            case "light grey":
+            case "white":
+                return Color.WHITE;
+            case "red":
+            case "crimson":
+                return Color.RED;
+            case "green": return Color.GREEN;
+            case "blue":
+            case "navy":
+            case "pacific blue":
+            case "sierra blue":
+                return Color.BLUE;
+            case "yellow":
+            case "gold":
+                return Color.YELLOW;
+            case "cyan": return Color.CYAN;
+            case "magenta":
+            case "purple":
+                return Color.MAGENTA;
+            case "rose gold":
+            case "pink":
+                return Color.parseColor("#FFC0CB");
+            case "midnight":
+                return Color.parseColor("#191970");
+            case "starlight":
+                return Color.parseColor("#F5F5DC");
+            default:
+                return Color.GRAY;
+        }
     }
 
 

@@ -43,7 +43,7 @@
                 android:text="Device Name"
                 android:textColor="@color/um_text_primary"
                 android:textSize="13sp"
-                android:maxLines="2"
+                android:lines="2"
                 android:ellipsize="end" />
 
             <TextView

@@ -9,6 +9,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
@@ -16,6 +17,7 @@ import com.bumptech.glide.Glide;
 import java.util.List;
 
 import lk.randika.ultramobile.R;
+import lk.randika.ultramobile.helper.ImageHelper;
 import lk.randika.ultramobile.model.Product;
 
 public class SectionAdapter extends RecyclerView.Adapter<SectionAdapter.ViewHolder> {
@@ -34,6 +36,17 @@ public class SectionAdapter extends RecyclerView.Adapter<SectionAdapter.ViewHold
         View view = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.item_product_recycler, parent, false);
 
+        if (parent instanceof RecyclerView) {
+            RecyclerView.LayoutManager lm = ((RecyclerView) parent).getLayoutManager();
+            if (lm instanceof LinearLayoutManager && ((LinearLayoutManager) lm).getOrientation() == LinearLayoutManager.HORIZONTAL) {
+                ViewGroup.LayoutParams lp = view.getLayoutParams();
+                if (lp != null) {
+                    lp.width = (int) (160 * parent.getContext().getResources().getDisplayMetrics().density);
+                    view.setLayoutParams(lp);
+                }
+            }
+        }
+
         return new ViewHolder(view);
     }
 
@@ -44,12 +57,8 @@ public class SectionAdapter extends RecyclerView.Adapter<SectionAdapter.ViewHold
         holder.productPrice.setText("LKR " + product.getPrice());
 
         if (product.getImages() != null && !product.getImages().isEmpty()) {
-            Glide.with(holder.itemView.getContext())
-                    .load(product.getImages().get(0))
-                    .centerCrop()
-                    .into(holder.productImage);
+            ImageHelper.loadImage(holder.itemView.getContext(), product.getImages().get(0), holder.productImage);
         } else {
-            // Optional: Set a placeholder if no image is found
             holder.productImage.setImageResource(R.drawable.ic_launcher_background);
         }
 

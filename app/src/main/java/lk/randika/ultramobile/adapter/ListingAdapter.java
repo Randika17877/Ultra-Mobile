@@ -16,6 +16,7 @@ import com.bumptech.glide.Glide;
 import java.util.List;
 
 import lk.randika.ultramobile.R;
+import lk.randika.ultramobile.helper.ImageHelper;
 import lk.randika.ultramobile.model.Product;
 
 public class ListingAdapter extends RecyclerView.Adapter<ListingAdapter.ViewHolder> {
@@ -54,10 +55,7 @@ public class ListingAdapter extends RecyclerView.Adapter<ListingAdapter.ViewHold
         holder.productPrice.setText("LKR " + product.getPrice());
 
         if (product.getImages() != null && !product.getImages().isEmpty()) {
-            Glide.with(holder.itemView.getContext())
-                    .load(product.getImages().get(0))
-                    .centerCrop()
-                    .into(holder.productImage);
+            ImageHelper.loadImage(holder.itemView.getContext(), product.getImages().get(0), holder.productImage);
         } else {
             holder.productImage.setImageResource(R.drawable.ic_launcher_background);
         }

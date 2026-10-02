@@ -1,6 +1,7 @@
 package lk.randika.ultramobile.model;
 
 import com.google.firebase.Timestamp;
+import com.google.firebase.firestore.IgnoreExtraProperties;
 
 import java.util.Date;
 import java.util.List;
@@ -14,6 +15,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
+@IgnoreExtraProperties
 public class Order {
     private String orderId;
     private String userId;

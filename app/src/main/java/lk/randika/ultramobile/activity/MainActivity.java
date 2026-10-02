@@ -49,6 +49,7 @@ import java.util.UUID;
 import lk.randika.ultramobile.R;
 import lk.randika.ultramobile.databinding.ActivityMainBinding;
 import lk.randika.ultramobile.databinding.SideNavHeaderBinding;
+import lk.randika.ultramobile.helper.ImageHelper;
 import lk.randika.ultramobile.fragment.CartFragment;
 import lk.randika.ultramobile.fragment.CategoryFragment;
 import lk.randika.ultramobile.fragment.HomeFragment;
@@ -204,19 +205,11 @@ public class MainActivity extends AppCompatActivity
                             sideNavHeaderBinding.headerUserName.setText(user.getName());
                             sideNavHeaderBinding.headerUserEmail.setText(user.getEmail());
 
-                            if (user.getProfilePicUrl() != null && !user.getProfilePicUrl().isEmpty()) {
-                                FirebaseStorage.getInstance().getReference("profile-images/" + user.getProfilePicUrl()).getDownloadUrl()
-                                        .addOnSuccessListener(uri -> {
-                                            Glide.with(MainActivity.this)
-                                                    .load(uri)
-                                                    .circleCrop()
-                                                    .into(sideNavHeaderBinding.headerProfilePic);
-                                        }).addOnFailureListener(e -> {
-                                            sideNavHeaderBinding.headerProfilePic.setImageResource(R.drawable.person_24px);
-                                        });
-                            } else {
-                                sideNavHeaderBinding.headerProfilePic.setImageResource(R.drawable.person_24px);
+                            String picUrl = user.getProfilePicUrl();
+                            if (picUrl != null && !picUrl.startsWith("profile-images/") && !picUrl.startsWith("http://") && !picUrl.startsWith("https://") && !picUrl.startsWith("gs://")) {
+                                picUrl = "profile-images/" + picUrl;
                             }
+                            ImageHelper.loadImage(MainActivity.this, picUrl, sideNavHeaderBinding.headerProfilePic, R.drawable.person_24px, R.drawable.person_24px);
                         }
                     }
                 });

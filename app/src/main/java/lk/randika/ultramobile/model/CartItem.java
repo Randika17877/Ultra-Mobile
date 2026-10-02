@@ -2,6 +2,8 @@ package lk.randika.ultramobile.model;
 
 import com.google.firebase.firestore.Exclude;
 
+import com.google.firebase.firestore.IgnoreExtraProperties;
+
 import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -14,6 +16,7 @@ import lombok.Setter;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
+@IgnoreExtraProperties
 public class CartItem {
     @Getter(onMethod_ = {@Exclude})
     @Setter(onMethod_ = {@Exclude})
