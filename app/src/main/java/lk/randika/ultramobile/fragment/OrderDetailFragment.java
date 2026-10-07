@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
@@ -15,7 +16,9 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import java.text.SimpleDateFormat;
 import java.util.Locale;
 import lk.randika.ultramobile.R;
+import lk.randika.ultramobile.helper.ImageHelper;
 import lk.randika.ultramobile.model.Order;
+import lk.randika.ultramobile.model.Product;
 
 public class OrderDetailFragment extends Fragment {
 
@@ -65,7 +68,7 @@ public class OrderDetailFragment extends Fragment {
     private void loadOrderDetails() {
         db.collection("orders").whereEqualTo("orderId", orderId).limit(1).get()
                 .addOnSuccessListener(queryDocumentSnapshots -> {
-                    if (!queryDocumentSnapshots.isEmpty()) {
+                    if (isAdded() && !queryDocumentSnapshots.isEmpty()) {
                         Order order = queryDocumentSnapshots.getDocuments().get(0).toObject(Order.class);
                         if (order != null) {
                             displayOrder(order);
@@ -131,6 +134,7 @@ public class OrderDetailFragment extends Fragment {
     private void addItemView(Order.OrderItem item) {
         View itemView = LayoutInflater.from(requireContext()).inflate(R.layout.item_cart, itemsContainer, false);
         
+        ImageView ivImage = itemView.findViewById(R.id.item_cart_image);
         TextView title = itemView.findViewById(R.id.item_cart_title);
         TextView price = itemView.findViewById(R.id.item_cart_price);
         TextView qty = itemView.findViewById(R.id.item_cart_quantity);
@@ -142,9 +146,33 @@ public class OrderDetailFragment extends Fragment {
         if (btnPlus != null) btnPlus.setVisibility(View.GONE);
         if (btnMinus != null) btnMinus.setVisibility(View.GONE);
         
-        title.setText(item.getProductTitle());
+        if (item.getProductTitle() != null && !item.getProductTitle().trim().isEmpty()) {
+            title.setText(item.getProductTitle());
+        } else {
+            title.setText("Product");
+        }
+        
         price.setText(String.format(Locale.getDefault(), "LKR %.2f", item.getUnitPrice()));
         qty.setText(String.valueOf(item.getQuantity()));
+
+        if (item.getImageUrl() != null && !item.getImageUrl().trim().isEmpty()) {
+            ImageHelper.loadImage(requireContext(), item.getImageUrl(), ivImage);
+        } else if (item.getProductId() != null && !item.getProductId().trim().isEmpty()) {
+            db.collection("products").whereEqualTo("productId", item.getProductId()).limit(1).get()
+                    .addOnSuccessListener(queryDocumentSnapshots -> {
+                        if (isAdded() && !queryDocumentSnapshots.isEmpty()) {
+                            Product product = queryDocumentSnapshots.getDocuments().get(0).toObject(Product.class);
+                            if (product != null) {
+                                if (item.getProductTitle() == null || item.getProductTitle().trim().isEmpty()) {
+                                    title.setText(product.getTitle());
+                                }
+                                if (product.getImages() != null && !product.getImages().isEmpty()) {
+                                    ImageHelper.loadImage(requireContext(), product.getImages().get(0), ivImage);
+                                }
+                            }
+                        }
+                    });
+        }
 
         itemsContainer.addView(itemView);
     }

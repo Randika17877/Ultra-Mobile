@@ -33,6 +33,7 @@ public class Order {
     public static class OrderItem {
         private String productId;
         private String productTitle; // Added to show in history without extra fetch
+        private String imageUrl;
         private double unitPrice;
         private int quantity;
         private List<OrderItem.Attribute> attributes;

@@ -22,6 +22,7 @@ import com.google.firebase.storage.FirebaseStorage;
 import lk.randika.ultramobile.R;
 import lk.randika.ultramobile.activity.SignInActivity;
 import lk.randika.ultramobile.databinding.FragmentProfileBinding;
+import lk.randika.ultramobile.helper.DatabaseHelper;
 import lk.randika.ultramobile.helper.ImageHelper;
 import lk.randika.ultramobile.model.User;
 
@@ -86,14 +87,14 @@ public class ProfileFragment extends Fragment {
                     }
                 });
 
-        // Load Wishlist count
-        firebaseFirestore.collection("users").document(uid).collection("wishlist")
-                .get()
-                .addOnSuccessListener(queryDocumentSnapshots -> {
-                    if (binding != null) {
-                        binding.profileWishlistCount.setText(String.valueOf(queryDocumentSnapshots.size()));
-                    }
-                });
+        // Load Wishlist count from local DatabaseHelper
+        if (getContext() != null) {
+            DatabaseHelper dbHelper = new DatabaseHelper(getContext());
+            int localWishlistCount = dbHelper.getWishlistProductIds().size();
+            if (binding != null) {
+                binding.profileWishlistCount.setText(String.valueOf(localWishlistCount));
+            }
+        }
     }
 
     private void setupClickListeners() {
@@ -114,6 +115,9 @@ public class ProfileFragment extends Fragment {
         });
 
         binding.profileMenuLogout.setOnClickListener(v -> {
+            if (getContext() != null) {
+                new DatabaseHelper(getContext()).clearWishlist();
+            }
             firebaseAuth.signOut();
             Intent intent = new Intent(getActivity(), SignInActivity.class);
             startActivity(intent);
@@ -127,6 +131,14 @@ public class ProfileFragment extends Fragment {
         transaction.replace(R.id.fragment_container, fragment);
         transaction.addToBackStack(null);
         transaction.commit();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (firebaseAuth != null && firebaseAuth.getCurrentUser() != null) {
+            loadStats(firebaseAuth.getCurrentUser().getUid());
+        }
     }
 
     @Override

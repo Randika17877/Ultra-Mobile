@@ -12,10 +12,14 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.ArrayList;
+import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Set;
 
 import lk.randika.ultramobile.R;
 import lk.randika.ultramobile.adapter.ListingAdapter;
@@ -69,30 +73,67 @@ public class WishlistFragment extends Fragment {
     }
 
     private void loadWishlist() {
-        List<String> productIds = dbHelper.getWishlistProductIds();
-        
-        wishlistProducts.clear();
-        if (productIds.isEmpty()) {
-            adapter.notifyDataSetChanged();
-            return;
-        }
+        List<String> rawIds = dbHelper.getWishlistProductIds();
+        Set<String> uniqueIds = new LinkedHashSet<>(rawIds);
+        List<String> productIds = new ArrayList<>(uniqueIds);
 
         fetchProducts(productIds);
     }
 
     private void fetchProducts(List<String> productIds) {
+        wishlistProducts.clear();
+        adapter.notifyDataSetChanged();
+
+        if (productIds == null || productIds.isEmpty()) return;
+
         for (String pid : productIds) {
+            if (pid == null || pid.trim().isEmpty()) {
+                dbHelper.removeFromWishlist(pid);
+                continue;
+            }
+
             db.collection("products").whereEqualTo("productId", pid)
                     .get()
                     .addOnSuccessListener(queryDocumentSnapshots -> {
-                        if (!queryDocumentSnapshots.isEmpty()) {
+                        if (isAdded() && !queryDocumentSnapshots.isEmpty()) {
                             Product product = queryDocumentSnapshots.getDocuments().get(0).toObject(Product.class);
                             if (product != null) {
-                                wishlistProducts.add(product);
-                                adapter.notifyItemInserted(wishlistProducts.size() - 1);
+                                addProductToWishlistList(product);
+                                return;
                             }
                         }
-                    });
+
+                        // Fallback: Check Firestore by document ID directly
+                        db.collection("products").document(pid).get()
+                                .addOnSuccessListener(doc -> {
+                                    if (isAdded() && doc.exists()) {
+                                        Product product = doc.toObject(Product.class);
+                                        if (product != null) {
+                                            if (product.getProductId() == null) product.setProductId(doc.getId());
+                                            addProductToWishlistList(product);
+                                            return;
+                                        }
+                                    }
+                                    // Stale/orphaned product ID not found in Firestore -> Purge from local DatabaseHelper
+                                    dbHelper.removeFromWishlist(pid);
+                                })
+                                .addOnFailureListener(e -> dbHelper.removeFromWishlist(pid));
+                    })
+                    .addOnFailureListener(e -> dbHelper.removeFromWishlist(pid));
+        }
+    }
+
+    private synchronized void addProductToWishlistList(Product product) {
+        boolean exists = false;
+        for (Product p : wishlistProducts) {
+            if (p.getProductId() != null && p.getProductId().equals(product.getProductId())) {
+                exists = true;
+                break;
+            }
+        }
+        if (!exists) {
+            wishlistProducts.add(product);
+            adapter.notifyDataSetChanged();
         }
     }
 

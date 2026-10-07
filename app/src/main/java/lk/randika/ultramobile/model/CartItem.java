@@ -1,9 +1,9 @@
 package lk.randika.ultramobile.model;
 
 import com.google.firebase.firestore.Exclude;
-
 import com.google.firebase.firestore.IgnoreExtraProperties;
 
+import java.io.Serializable;
 import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -17,7 +17,7 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 @IgnoreExtraProperties
-public class CartItem {
+public class CartItem implements Serializable {
     @Getter(onMethod_ = {@Exclude})
     @Setter(onMethod_ = {@Exclude})
     private String documentId;
@@ -35,8 +35,9 @@ public class CartItem {
     @Builder
     @AllArgsConstructor
     @NoArgsConstructor
-    public static class Attribute {
+    public static class Attribute implements Serializable {
         private String name;
         private String value;
     }
 }
+

@@ -184,16 +184,17 @@ public class ProductDetailsFragment extends Fragment {
                 if (attributes == null) return;
 
                 CartItem cartItem = new CartItem(productId, quantity, attributes);
-                String uid = firebaseAuth.getCurrentUser().getUid();
 
-                db.collection("users").document(uid).collection("cart").document()
-                        .set(cartItem)
-                        .addOnSuccessListener(unused -> {
-                            getParentFragmentManager().beginTransaction()
-                                    .replace(R.id.fragment_container, new CheckoutFragment())
-                                    .addToBackStack(null)
-                                    .commit();
-                        });
+                Bundle bundle = new Bundle();
+                bundle.putSerializable("buyNowItem", cartItem);
+
+                CheckoutFragment checkoutFragment = new CheckoutFragment();
+                checkoutFragment.setArguments(bundle);
+
+                getParentFragmentManager().beginTransaction()
+                        .replace(R.id.fragment_container, checkoutFragment)
+                        .addToBackStack(null)
+                        .commit();
             }
         });
 
@@ -210,17 +211,30 @@ public class ProductDetailsFragment extends Fragment {
     }
 
     private void toggleWishlist() {
+        FirebaseAuth auth = FirebaseAuth.getInstance();
+        String uid = auth.getCurrentUser() != null ? auth.getCurrentUser().getUid() : null;
+        FirebaseFirestore firestore = FirebaseFirestore.getInstance();
+
         if (isInWishlist) {
             if (dbHelper.removeFromWishlist(productId)) {
                 isInWishlist = false;
                 binding.productDetailsWishlistBtn.setColorFilter(getResources().getColor(R.color.um_text_secondary));
-                Toast.makeText(getContext(), "Removed from local wishlist", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), "Removed from wishlist", Toast.LENGTH_SHORT).show();
+                if (uid != null) {
+                    firestore.collection("users").document(uid).collection("wishlist").document(productId).delete();
+                }
             }
         } else {
             if (dbHelper.addToWishlist(productId)) {
                 isInWishlist = true;
                 binding.productDetailsWishlistBtn.setColorFilter(getResources().getColor(R.color.um_primary));
-                Toast.makeText(getContext(), "Added to local wishlist", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), "Added to wishlist", Toast.LENGTH_SHORT).show();
+                if (uid != null) {
+                    Map<String, Object> itemData = new HashMap<>();
+                    itemData.put("productId", productId);
+                    itemData.put("addedAt", com.google.firebase.Timestamp.now());
+                    firestore.collection("users").document(uid).collection("wishlist").document(productId).set(itemData);
+                }
             }
         }
     }

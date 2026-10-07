@@ -220,14 +220,25 @@ public class CheckoutFragment extends Fragment {
 
 
     private void getCartItems(FirestoreCallback<List<CartItem>> callback) {
+        if (getArguments() != null && getArguments().containsKey("buyNowItem")) {
+            CartItem buyNowItem = (CartItem) getArguments().getSerializable("buyNowItem");
+            if (buyNowItem != null) {
+                List<CartItem> items = new ArrayList<>();
+                items.add(buyNowItem);
+                callback.onCallback(items);
+                return;
+            }
+        }
+
         String uid = firebaseAuth.getCurrentUser().getUid();
         db.collection("users").document(uid).collection("cart").get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
             @Override
             public void onSuccess(QuerySnapshot qds) {
-                if (!qds.isEmpty()) {
-                    List<CartItem> cartItems = qds.toObjects(CartItem.class);
-                    callback.onCallback(cartItems);
+                List<CartItem> cartItems = new ArrayList<>();
+                if (qds != null && !qds.isEmpty()) {
+                    cartItems = qds.toObjects(CartItem.class);
                 }
+                callback.onCallback(cartItems);
             }
         });
     }
@@ -351,11 +362,18 @@ public class CheckoutFragment extends Fragment {
                             attributes.add(attribute);
                         }
 
-                        Order.OrderItem orderItem = Order.OrderItem.builder().productId(cartItem.getProductId()).unitPrice(product.getPrice()).quantity(cartItem.getQuantity()).attributes(attributes).build();
+                        String firstImage = (product.getImages() != null && !product.getImages().isEmpty()) ? product.getImages().get(0) : null;
+                        Order.OrderItem orderItem = Order.OrderItem.builder()
+                                .productId(cartItem.getProductId())
+                                .productTitle(product.getTitle())
+                                .imageUrl(firstImage)
+                                .unitPrice(product.getPrice())
+                                .quantity(cartItem.getQuantity())
+                                .attributes(attributes)
+                                .build();
                         orderItems.add(orderItem);
 
-
-                        ///  Add order items to Oder object
+                        ///  Add order items to Order object
                         order.setOrderItems(orderItems);
 
                     }
@@ -363,15 +381,16 @@ public class CheckoutFragment extends Fragment {
                 db.collection("orders").document().set(order).addOnSuccessListener(aVoid -> {
                     Toast.makeText(getContext(), "Order Saved!", Toast.LENGTH_SHORT).show();
 
-                    // Clear cart
-                    db.collection("users").document(uid).collection("cart")
-                            .get()
-                            .addOnSuccessListener(qds -> {
-                                qds.getDocuments().forEach(ds -> {
-                                    ds.getReference().delete();
+                    // Clear cart only if this was a cart checkout (not a Buy Now checkout)
+                    if (getArguments() == null || !getArguments().containsKey("buyNowItem")) {
+                        db.collection("users").document(uid).collection("cart")
+                                .get()
+                                .addOnSuccessListener(qds -> {
+                                    qds.getDocuments().forEach(ds -> {
+                                        ds.getReference().delete();
+                                    });
                                 });
-                            });
-
+                    }
 
                     getParentFragmentManager().beginTransaction()
                             .replace(R.id.fragment_container, new HomeFragment())

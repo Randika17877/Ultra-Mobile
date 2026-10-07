@@ -74,4 +74,9 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         cursor.close();
         return productIds;
     }
+
+    public void clearWishlist() {
+        SQLiteDatabase db = this.getWritableDatabase();
+        db.delete(TABLE_WISHLIST, null, null);
+    }
 }
