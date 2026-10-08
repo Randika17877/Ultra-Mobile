@@ -59,6 +59,7 @@ dependencies {
     implementation (libs.dotsindicator)
     implementation libs.payhere.android.sdk
     implementation libs.gson
-
+    implementation libs.play.services.maps
+    implementation libs.play.services.location
 
 }

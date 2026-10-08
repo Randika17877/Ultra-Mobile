@@ -31,10 +31,12 @@ public class SettingsFragment extends Fragment {
             makePhoneCall("+94112345678");
         });
 
-        // Map Functionality - Open Location in Maps
+        // Map Functionality - Open Location in Maps Activity inside app
         view.findViewById(R.id.btn_our_location).setOnClickListener(v -> {
-            openLocationInMap("6.9271", "79.8612", "UltraMobile Main Branch");
+            Intent intent = new Intent(getActivity(), lk.randika.ultramobile.activity.MapsActivity.class);
+            startActivity(intent);
         });
+
 
         // Placeholder for Terms and Privacy
         view.findViewById(R.id.btn_terms).setOnClickListener(v -> {
