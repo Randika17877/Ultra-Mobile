@@ -32,7 +32,7 @@ public class HomeFragment extends Fragment {
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+            Bundle savedInstanceState) {
         binding = FragmentHomeBinding.inflate(inflater, container, false);
         return binding.getRoot();
     }
@@ -80,8 +80,8 @@ public class HomeFragment extends Fragment {
                     if (!qds.isEmpty()) {
                         List<Product> products = qds.toObjects(Product.class);
 
-                        LinearLayoutManager layoutManager =
-                                new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
+                        LinearLayoutManager layoutManager = new LinearLayoutManager(getContext(),
+                                LinearLayoutManager.HORIZONTAL, false);
 
                         binding.homeTopSellSection.itemSectionContainer.setLayoutManager(layoutManager);
                         binding.homeTopSellSection.itemSectionTitle.setText("Hot Deals");
@@ -103,9 +103,11 @@ public class HomeFragment extends Fragment {
                         List<Product> products = qds.toObjects(Product.class);
 
                         GridLayoutManager layoutManager = new GridLayoutManager(getContext(), 2);
-                        // Make sure the grid is not scrollable within NestedScrollView if it's supposed to expand
-                        // But NestedScrollView handles child heights usually. 
-                        // However, for better performance with large lists, consider adding android:nestedScrollingEnabled="false"
+                        // Make sure the grid is not scrollable within NestedScrollView if it's supposed
+                        // to expand
+                        // But NestedScrollView handles child heights usually.
+                        // However, for better performance with large lists, consider adding
+                        // android:nestedScrollingEnabled="false"
                         binding.homeAllProductsSection.itemSectionContainer.setLayoutManager(layoutManager);
                         binding.homeAllProductsSection.itemSectionContainer.setNestedScrollingEnabled(false);
                         binding.homeAllProductsSection.itemSectionTitle.setText("Recently Added");

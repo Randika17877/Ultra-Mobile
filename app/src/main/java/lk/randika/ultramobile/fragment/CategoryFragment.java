@@ -35,7 +35,7 @@ public class CategoryFragment extends Fragment {
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+            Bundle savedInstanceState) {
         binding = FragmentCategoryBinding.inflate(inflater, container, false);
         return binding.getRoot();
     }
@@ -49,7 +49,7 @@ public class CategoryFragment extends Fragment {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
 
         // Uncomment the line below to seed the database with categories and products
-//         seedDatabase(db);
+        // seedDatabase(db);
 
         loadCategories(db);
     }
@@ -65,8 +65,7 @@ public class CategoryFragment extends Fragment {
                 new Category("cat_watches", "Smart Watches", ""),
                 new Category("cat_bands", "Smart Wristbands", ""),
                 new Category("cat_parts", "PC Parts", ""),
-                new Category("cat_prebuilds", "Prebuild PC's", "")
-        );
+                new Category("cat_prebuilds", "Prebuild PC's", ""));
 
         for (Category c : categories) {
             DocumentReference ref = db.collection("categories").document(c.getCategoryId());
@@ -77,27 +76,36 @@ public class CategoryFragment extends Fragment {
         List<Product> products = new ArrayList<>();
 
         // Mobile Phones
-        products.add(new Product("p1", "iPhone 15 Pro", "A17 Pro chip, Titanium design.", 999.0, "cat_mobiles", new ArrayList<>(), 50, true, 4.9f, null));
-        products.add(new Product("p2", "Samsung Galaxy S24 Ultra", "AI-powered, 200MP camera.", 1199.0, "cat_mobiles", new ArrayList<>(), 40, true, 4.8f, null));
+        products.add(new Product("p1", "iPhone 15 Pro", "A17 Pro chip, Titanium design.", 999.0, "cat_mobiles",
+                new ArrayList<>(), 50, true, 4.9f, null));
+        products.add(new Product("p2", "Samsung Galaxy S24 Ultra", "AI-powered, 200MP camera.", 1199.0, "cat_mobiles",
+                new ArrayList<>(), 40, true, 4.8f, null));
 
         // Laptops
-        products.add(new Product("p3", "MacBook Pro M3", "Supercharged by M3 chip.", 1599.0, "cat_laptops", new ArrayList<>(), 20, true, 4.9f, null));
-        products.add(new Product("p4", "ASUS ROG Zephyrus G14", "Gaming powerhouse.", 1449.0, "cat_laptops", new ArrayList<>(), 15, true, 4.7f, null));
+        products.add(new Product("p3", "MacBook Pro M3", "Supercharged by M3 chip.", 1599.0, "cat_laptops",
+                new ArrayList<>(), 20, true, 4.9f, null));
+        products.add(new Product("p4", "ASUS ROG Zephyrus G14", "Gaming powerhouse.", 1449.0, "cat_laptops",
+                new ArrayList<>(), 15, true, 4.7f, null));
 
         // Tablets
-        products.add(new Product("p5", "iPad Air", "Powerful, colorful, wonderful.", 599.0, "cat_tablets", new ArrayList<>(), 30, true, 4.8f, null));
+        products.add(new Product("p5", "iPad Air", "Powerful, colorful, wonderful.", 599.0, "cat_tablets",
+                new ArrayList<>(), 30, true, 4.8f, null));
 
         // Smart Watches
-        products.add(new Product("p6", "Apple Watch Ultra 2", "The ultimate sports watch.", 799.0, "cat_watches", new ArrayList<>(), 25, true, 4.9f, null));
+        products.add(new Product("p6", "Apple Watch Ultra 2", "The ultimate sports watch.", 799.0, "cat_watches",
+                new ArrayList<>(), 25, true, 4.9f, null));
 
         // Smart Wristbands
-        products.add(new Product("p7", "Xiaomi Mi Band 8", "Active life, smart choice.", 45.0, "cat_bands", new ArrayList<>(), 100, true, 4.5f, null));
+        products.add(new Product("p7", "Xiaomi Mi Band 8", "Active life, smart choice.", 45.0, "cat_bands",
+                new ArrayList<>(), 100, true, 4.5f, null));
 
         // PC Parts
-        products.add(new Product("p8", "NVIDIA RTX 4080 Super", "Beyond Fast.", 999.0, "cat_parts", new ArrayList<>(), 10, true, 4.8f, null));
+        products.add(new Product("p8", "NVIDIA RTX 4080 Super", "Beyond Fast.", 999.0, "cat_parts", new ArrayList<>(),
+                10, true, 4.8f, null));
 
         // Prebuild PC's
-        products.add(new Product("p9", "Alienware Aurora R16", "Elite Gaming Desktop.", 2299.0, "cat_prebuilds", new ArrayList<>(), 5, true, 4.6f, null));
+        products.add(new Product("p9", "Alienware Aurora R16", "Elite Gaming Desktop.", 2299.0, "cat_prebuilds",
+                new ArrayList<>(), 5, true, 4.6f, null));
 
         for (Product p : products) {
             DocumentReference ref = db.collection("products").document(p.getProductId());
