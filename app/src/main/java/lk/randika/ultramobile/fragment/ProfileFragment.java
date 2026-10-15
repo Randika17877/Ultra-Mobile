@@ -13,11 +13,9 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
-import com.bumptech.glide.Glide;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.storage.FirebaseStorage;
 
 import lk.randika.ultramobile.R;
 import lk.randika.ultramobile.activity.SignInActivity;
@@ -71,9 +69,7 @@ public class ProfileFragment extends Fragment {
                             ImageHelper.loadImage(getContext(), picUrl, binding.profilePic, R.drawable.person_24px, R.drawable.person_24px);
                         }
                     }
-                }).addOnFailureListener(e -> {
-                    Log.e("ProfileFragment", "Error loading profile: " + e.getMessage());
-                });
+                }).addOnFailureListener(e -> Log.e("ProfileFragment", "Error loading profile: " + e.getMessage()));
     }
 
     private void loadStats(String uid) {
@@ -90,53 +86,51 @@ public class ProfileFragment extends Fragment {
         // Load Wishlist count from local DatabaseHelper in background
         new Thread(() -> {
             if (getContext() != null) {
-                DatabaseHelper dbHelper = new DatabaseHelper(getContext());
-                int localWishlistCount = dbHelper.getWishlistProductIds().size();
+                try (DatabaseHelper dbHelper = new DatabaseHelper(getContext())) {
+                    int localWishlistCount = dbHelper.getWishlistProductIds().size();
 
-                if (getActivity() != null) {
-                    getActivity().runOnUiThread(() -> {
-                        if (binding != null) {
-                            binding.profileWishlistCount.setText(String.valueOf(localWishlistCount));
-                        }
-                    });
+                    if (getActivity() != null) {
+                        getActivity().runOnUiThread(() -> {
+                            if (binding != null) {
+                                binding.profileWishlistCount.setText(String.valueOf(localWishlistCount));
+                            }
+                        });
+                    }
                 }
             }
         }).start();
     }
 
     private void setupClickListeners() {
-        binding.profileMenuEdit.setOnClickListener(v -> {
-            loadFragment(new EditProfileFragment());
-        });
+        binding.profileMenuEdit.setOnClickListener(v -> loadFragment(new EditProfileFragment()));
 
-        binding.profileMenuOrders.setOnClickListener(v -> {
-            loadFragment(new OrdersFragment());
-        });
+        // Stat buttons — navigate directly to the page
+        binding.profileStatOrders.setOnClickListener(v -> loadFragment(new OrdersFragment()));
 
-        binding.profileMenuWishlist.setOnClickListener(v -> {
-            loadFragment(new WishlistFragment());
-        });
+        binding.profileStatWishlist.setOnClickListener(v -> loadFragment(new WishlistFragment()));
 
-        binding.profileMenuSettings.setOnClickListener(v -> {
-            loadFragment(new SettingsFragment());
-        });
+        binding.profileMenuOrders.setOnClickListener(v -> loadFragment(new OrdersFragment()));
 
-        binding.profileMenuLogout.setOnClickListener(v -> {
-            new Thread(() -> {
-                if (getContext() != null) {
-                    new DatabaseHelper(getContext()).clearWishlist();
+        binding.profileMenuWishlist.setOnClickListener(v -> loadFragment(new WishlistFragment()));
+
+        binding.profileMenuSettings.setOnClickListener(v -> loadFragment(new SettingsFragment()));
+
+        binding.profileMenuLogout.setOnClickListener(v -> new Thread(() -> {
+            if (getContext() != null) {
+                try (DatabaseHelper dbHelper = new DatabaseHelper(getContext())) {
+                    dbHelper.clearWishlist();
                 }
+            }
 
-                if (getActivity() != null) {
-                    getActivity().runOnUiThread(() -> {
-                        firebaseAuth.signOut();
-                        Intent intent = new Intent(getActivity(), SignInActivity.class);
-                        startActivity(intent);
-                        getActivity().finish();
-                    });
-                }
-            }).start();
-        });
+            if (getActivity() != null) {
+                getActivity().runOnUiThread(() -> {
+                    firebaseAuth.signOut();
+                    Intent intent = new Intent(getActivity(), SignInActivity.class);
+                    startActivity(intent);
+                    getActivity().finish();
+                });
+            }
+        }).start());
     }
 
     private void loadFragment(Fragment fragment) {

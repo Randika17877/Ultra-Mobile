@@ -28,4 +28,38 @@
     <string name="text_password_message">Password must contain at least 6 characters</string>
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="google_maps_key" translatable="false">AIzaSyAnxIxKM2jO2U2BrLb9BNEkbpRFMVe8zVk</string>
+
+    <!-- Settings & Battery Saver -->
+    <string name="settings_preferences">Preferences</string>
+    <string name="battery_saver_title">Battery Saver Mode</string>
+    <string name="battery_saver_desc">Reflects device battery saver status (Read Only)</string>
+    <string name="msg_battery_saver_on">Battery Saver On: Camera and Maps disabled</string>
+    <string name="msg_maps_disabled">Maps is disabled in Battery Saver Mode</string>
+    <string name="msg_camera_disabled">Camera and Gallery are disabled in Battery Saver Mode</string>
+
+    <string name="settings_about_title">About UltraMobile</string>
+    <string name="settings_app_info_desc">Your ultimate destination for the latest mobile technology and accessories. Experience seamless shopping with UltraMobile.</string>
+    <string name="settings_contact_title">Get in Touch</string>
+    <string name="settings_support_title">Call Customer Support</string>
+    <string name="settings_support_phone">+94 112 345 678</string>
+    <string name="settings_location_title">Our Location</string>
+    <string name="settings_location_desc">Visit our main branch</string>
+    <string name="settings_terms">Terms and Conditions</string>
+    <string name="settings_privacy">Privacy Policy</string>
+    <string name="settings_copyright">© 2024 UltraMobile Inc. All rights reserved.</string>
+    <string name="msg_coming_soon">Coming soon</string>
+    <string name="msg_profile_updated">Profile updated successfully</string>
+    <string name="msg_profile_update_failed">Failed to update profile</string>
+    <string name="msg_upload_failed">Failed to upload image</string>
+    <string name="msg_camera_permission_denied">Camera permission denied</string>
+    <string name="msg_error_image_file">Error creating image file</string>
+    <string name="msg_added_wishlist">Added to wishlist</string>
+    <string name="msg_removed_wishlist">Removed from wishlist</string>
+    <string name="msg_added_cart">Item added to cart!</string>
+    <string name="msg_select_attribute">Please select %s</string>
+    <string name="label_related_products">Related Products</string>
+    <string name="currency_lkr">LKR %s</string>
+    <string name="parentheses_format">(%s)</string>
+    <string name="map_marker_title">UltraMobile Store</string>
+    <string name="map_marker_snippet">Main Branch - Kandy, Sri Lanka</string>
 </resources>

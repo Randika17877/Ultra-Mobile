@@ -10,10 +10,7 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.ArrayList;
@@ -32,12 +29,11 @@ public class WishlistFragment extends Fragment {
 
     private FragmentWishlistBinding binding;
     private FirebaseFirestore db;
-    private List<Product> wishlistProducts = new ArrayList<>();
+    private final List<Product> wishlistProducts = new ArrayList<>();
     private ListingAdapter adapter;
-    private DatabaseHelper dbHelper;
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         binding = FragmentWishlistBinding.inflate(inflater, container, false);
         return binding.getRoot();
@@ -48,7 +44,6 @@ public class WishlistFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         db = FirebaseFirestore.getInstance();
-        dbHelper = new DatabaseHelper(requireContext());
 
         setupRecyclerView();
         loadWishlist();
@@ -73,22 +68,30 @@ public class WishlistFragment extends Fragment {
     }
 
     private void loadWishlist() {
-        List<String> rawIds = dbHelper.getWishlistProductIds();
-        Set<String> uniqueIds = new LinkedHashSet<>(rawIds);
-        List<String> productIds = new ArrayList<>(uniqueIds);
+        if (getContext() == null) return;
+        
+        new Thread(() -> {
+            try (DatabaseHelper dbHelper = new DatabaseHelper(getContext())) {
+                List<String> rawIds = dbHelper.getWishlistProductIds();
+                Set<String> uniqueIds = new LinkedHashSet<>(rawIds);
+                List<String> productIds = new ArrayList<>(uniqueIds);
 
-        fetchProducts(productIds);
+                if (getActivity() != null) {
+                    getActivity().runOnUiThread(() -> fetchProducts(productIds));
+                }
+            }
+        }).start();
     }
 
     private void fetchProducts(List<String> productIds) {
         wishlistProducts.clear();
         adapter.notifyDataSetChanged();
 
-        if (productIds == null || productIds.isEmpty()) return;
+        if (productIds == null || productIds.isEmpty() || getContext() == null) return;
 
         for (String pid : productIds) {
             if (pid == null || pid.trim().isEmpty()) {
-                dbHelper.removeFromWishlist(pid);
+                removeFromLocalWishlist(pid);
                 continue;
             }
 
@@ -114,13 +117,21 @@ public class WishlistFragment extends Fragment {
                                             return;
                                         }
                                     }
-                                    // Stale/orphaned product ID not found in Firestore -> Purge from local DatabaseHelper
-                                    dbHelper.removeFromWishlist(pid);
+                                    removeFromLocalWishlist(pid);
                                 })
-                                .addOnFailureListener(e -> dbHelper.removeFromWishlist(pid));
+                                .addOnFailureListener(e -> removeFromLocalWishlist(pid));
                     })
-                    .addOnFailureListener(e -> dbHelper.removeFromWishlist(pid));
+                    .addOnFailureListener(e -> removeFromLocalWishlist(pid));
         }
+    }
+    
+    private void removeFromLocalWishlist(String productId) {
+        if (getContext() == null) return;
+        new Thread(() -> {
+            try (DatabaseHelper dbHelper = new DatabaseHelper(getContext())) {
+                dbHelper.removeFromWishlist(productId);
+            }
+        }).start();
     }
 
     private synchronized void addProductToWishlistList(Product product) {

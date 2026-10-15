@@ -37,6 +37,7 @@ import java.util.UUID;
 
 import lk.randika.ultramobile.R;
 import lk.randika.ultramobile.databinding.FragmentEditProfileBinding;
+import lk.randika.ultramobile.helper.BatteryHelper;
 import lk.randika.ultramobile.helper.ImageHelper;
 import lk.randika.ultramobile.model.User;
 
@@ -76,7 +77,7 @@ public class EditProfileFragment extends Fragment {
                 if (isGranted) {
                     openCamera();
                 } else {
-                    Toast.makeText(getContext(), "Camera permission denied", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getContext(), R.string.msg_camera_permission_denied, Toast.LENGTH_SHORT).show();
                 }
             }
     );
@@ -122,6 +123,11 @@ public class EditProfileFragment extends Fragment {
     }
 
     private void showImageSourceDialog() {
+        if (BatteryHelper.isBatterySaverEnabled(getContext())) {
+            Toast.makeText(getContext(), R.string.msg_camera_disabled, Toast.LENGTH_SHORT).show();
+            return;
+        }
+
         String[] options = {"Camera", "Gallery"};
         new AlertDialog.Builder(requireContext())
                 .setTitle("Select Image Source")
@@ -156,7 +162,7 @@ public class EditProfileFragment extends Fragment {
             intent.putExtra(MediaStore.EXTRA_OUTPUT, cameraImageUri);
             cameraLauncher.launch(intent);
         } catch (IOException e) {
-            Toast.makeText(getContext(), "Error creating image file", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getContext(), R.string.msg_error_image_file, Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -189,7 +195,7 @@ public class EditProfileFragment extends Fragment {
         fileRef.putFile(selectedImageUri)
                 .addOnSuccessListener(taskSnapshot -> updateFirestore(name, fileName))
                 .addOnFailureListener(e -> {
-                    Toast.makeText(getContext(), "Failed to upload image", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getContext(), R.string.msg_upload_failed, Toast.LENGTH_SHORT).show();
                     binding.editProfileBtnSave.setEnabled(true);
                 });
     }
@@ -200,11 +206,11 @@ public class EditProfileFragment extends Fragment {
         db.collection("users").document(uid)
                 .update("name", name, "profilePicUrl", profilePicUrl)
                 .addOnSuccessListener(unused -> {
-                    Toast.makeText(getContext(), "Profile updated successfully", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getContext(), R.string.msg_profile_updated, Toast.LENGTH_SHORT).show();
                     getParentFragmentManager().popBackStack();
                 })
                 .addOnFailureListener(e -> {
-                    Toast.makeText(getContext(), "Failed to update profile", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getContext(), R.string.msg_profile_update_failed, Toast.LENGTH_SHORT).show();
                     binding.editProfileBtnSave.setEnabled(true);
                 });
     }

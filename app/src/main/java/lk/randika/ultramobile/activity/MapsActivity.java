@@ -70,8 +70,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         mMap.addMarker(new MarkerOptions()
                 .position(shopLocation)
-                .title("UltraMobile Store")
-                .snippet("Main Branch - Kandy, Sri Lanka"));
+                .title(getString(R.string.map_marker_title))
+                .snippet(getString(R.string.map_marker_snippet)));
 
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(shopLocation, 15f));
     }
