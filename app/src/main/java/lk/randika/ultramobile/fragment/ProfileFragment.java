@@ -87,14 +87,21 @@ public class ProfileFragment extends Fragment {
                     }
                 });
 
-        // Load Wishlist count from local DatabaseHelper
-        if (getContext() != null) {
-            DatabaseHelper dbHelper = new DatabaseHelper(getContext());
-            int localWishlistCount = dbHelper.getWishlistProductIds().size();
-            if (binding != null) {
-                binding.profileWishlistCount.setText(String.valueOf(localWishlistCount));
+        // Load Wishlist count from local DatabaseHelper in background
+        new Thread(() -> {
+            if (getContext() != null) {
+                DatabaseHelper dbHelper = new DatabaseHelper(getContext());
+                int localWishlistCount = dbHelper.getWishlistProductIds().size();
+
+                if (getActivity() != null) {
+                    getActivity().runOnUiThread(() -> {
+                        if (binding != null) {
+                            binding.profileWishlistCount.setText(String.valueOf(localWishlistCount));
+                        }
+                    });
+                }
             }
-        }
+        }).start();
     }
 
     private void setupClickListeners() {
@@ -115,13 +122,20 @@ public class ProfileFragment extends Fragment {
         });
 
         binding.profileMenuLogout.setOnClickListener(v -> {
-            if (getContext() != null) {
-                new DatabaseHelper(getContext()).clearWishlist();
-            }
-            firebaseAuth.signOut();
-            Intent intent = new Intent(getActivity(), SignInActivity.class);
-            startActivity(intent);
-            getActivity().finish();
+            new Thread(() -> {
+                if (getContext() != null) {
+                    new DatabaseHelper(getContext()).clearWishlist();
+                }
+
+                if (getActivity() != null) {
+                    getActivity().runOnUiThread(() -> {
+                        firebaseAuth.signOut();
+                        Intent intent = new Intent(getActivity(), SignInActivity.class);
+                        startActivity(intent);
+                        getActivity().finish();
+                    });
+                }
+            }).start();
         });
     }
 

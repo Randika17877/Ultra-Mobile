@@ -4,11 +4,13 @@ import android.Manifest;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
+import android.net.ConnectivityManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -54,12 +56,14 @@ import lk.randika.ultramobile.fragment.CartFragment;
 import lk.randika.ultramobile.fragment.CategoryFragment;
 import lk.randika.ultramobile.fragment.HomeFragment;
 import lk.randika.ultramobile.fragment.ListingFragment;
+import lk.randika.ultramobile.fragment.OrderDetailFragment;
 import lk.randika.ultramobile.fragment.OrdersFragment;
 import lk.randika.ultramobile.fragment.ProfileFragment;
 import lk.randika.ultramobile.fragment.SearchFragment;
 import lk.randika.ultramobile.fragment.SettingsFragment;
 import lk.randika.ultramobile.fragment.WishlistFragment;
 import lk.randika.ultramobile.model.User;
+import lk.randika.ultramobile.receiver.NetworkChangeReceiver;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, BottomNavigationView.OnItemSelectedListener, SensorEventListener {
@@ -73,6 +77,9 @@ public class MainActivity extends AppCompatActivity
     private BottomNavigationView bottomNavigationView;
     private FirebaseAuth firebaseAuth;
     private FirebaseFirestore firebaseFirestore;
+
+    // Network receiver
+    private NetworkChangeReceiver networkReceiver;
 
     private SensorManager sensorManager;
     private float acceleration;
@@ -194,6 +201,8 @@ public class MainActivity extends AppCompatActivity
         currentAcceleration = SensorManager.GRAVITY_EARTH;
         lastAcceleration = SensorManager.GRAVITY_EARTH;
 
+        // Handle deep-link from notification (cold start)
+        handleNotificationDeepLink(getIntent());
     }
 
     private void updateUserDetails(String uid) {
@@ -228,6 +237,51 @@ public class MainActivity extends AppCompatActivity
             intent.setAction(Intent.ACTION_GET_CONTENT);
             activityResultLauncher.launch(intent);
         });
+    }
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        setIntent(intent);
+        handleNotificationDeepLink(intent);
+    }
+
+    private void handleNotificationDeepLink(Intent intent) {
+        if (intent != null && "order_detail".equals(intent.getStringExtra("navigate_to"))) {
+            String orderId = intent.getStringExtra("orderId");
+            if (orderId != null && !orderId.isEmpty()) {
+                loadFragment(OrderDetailFragment.newInstance(orderId));
+                // Clear the extra so rotation doesn't re-navigate
+                intent.removeExtra("navigate_to");
+            }
+        }
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        networkReceiver = new NetworkChangeReceiver(isConnected -> runOnUiThread(() ->
+                binding.noInternetBanner.setVisibility(isConnected ? View.GONE : View.VISIBLE)
+        ));
+        IntentFilter filter = new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION);
+        // Android 13+ requires explicit export flag for dynamic receivers
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            registerReceiver(networkReceiver, filter, Context.RECEIVER_NOT_EXPORTED);
+        } else {
+            registerReceiver(networkReceiver, filter);
+        }
+        // Check current state immediately so banner shows right away if already offline
+        binding.noInternetBanner.setVisibility(
+                NetworkChangeReceiver.isConnected(this) ? View.GONE : View.VISIBLE);
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        if (networkReceiver != null) {
+            unregisterReceiver(networkReceiver);
+            networkReceiver = null;
+        }
     }
 
     private void requestNotificationPermission() {

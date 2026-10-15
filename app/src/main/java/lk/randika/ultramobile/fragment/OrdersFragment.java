@@ -1,5 +1,6 @@
 package lk.randika.ultramobile.fragment;
 
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -9,6 +10,7 @@ import android.widget.LinearLayout;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import com.google.firebase.auth.FirebaseAuth;
@@ -20,6 +22,7 @@ import java.util.List;
 import lk.randika.ultramobile.R;
 import lk.randika.ultramobile.adapter.OrderAdapter;
 import lk.randika.ultramobile.model.Order;
+import lk.randika.ultramobile.receiver.OrderStatusReceiver;
 
 public class OrdersFragment extends Fragment {
 
@@ -29,6 +32,7 @@ public class OrdersFragment extends Fragment {
     private LinearLayout emptyState;
     private FirebaseFirestore db;
     private FirebaseAuth auth;
+    private OrderStatusReceiver orderStatusReceiver;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -53,6 +57,28 @@ public class OrdersFragment extends Fragment {
         loadOrders();
         
         return view;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        orderStatusReceiver = new OrderStatusReceiver((orderId, newStatus) -> {
+            Log.d("OrdersFragment", "Order " + orderId + " updated to " + newStatus + ", reloading.");
+            loadOrders();
+        });
+        IntentFilter filter = new IntentFilter(OrderStatusReceiver.ACTION_ORDER_UPDATED);
+        LocalBroadcastManager.getInstance(requireContext())
+                .registerReceiver(orderStatusReceiver, filter);
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        if (orderStatusReceiver != null) {
+            LocalBroadcastManager.getInstance(requireContext())
+                    .unregisterReceiver(orderStatusReceiver);
+            orderStatusReceiver = null;
+        }
     }
 
     private void loadOrders() {

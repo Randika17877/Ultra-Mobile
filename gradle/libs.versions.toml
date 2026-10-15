@@ -1,4 +1,5 @@
 [versions]
+localbroadcastmanager = "1.1.0"
 agp = "9.0.1"
 dotsindicator = "5.1.0"
 firebaseBom = "34.9.0"
@@ -41,6 +42,7 @@ picasso = { module = "com.squareup.picasso:picasso", version.ref = "picasso" }
 preference = { group = "androidx.preference", name = "preference", version.ref = "preference" }
 play-services-maps = { group = "com.google.android.gms", name = "play-services-maps", version.ref = "playServicesMaps" }
 play-services-location = { group = "com.google.android.gms", name = "play-services-location", version.ref = "playServicesLocation" }
+localbroadcastmanager = { group = "androidx.localbroadcastmanager", name = "localbroadcastmanager", version.ref = "localbroadcastmanager" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

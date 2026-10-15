@@ -1,5 +1,6 @@
 package lk.randika.ultramobile.fragment;
 
+import android.content.IntentFilter;
 import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -12,6 +13,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import com.google.firebase.firestore.FirebaseFirestore;
 import java.text.SimpleDateFormat;
 import java.util.Locale;
@@ -19,12 +21,14 @@ import lk.randika.ultramobile.R;
 import lk.randika.ultramobile.helper.ImageHelper;
 import lk.randika.ultramobile.model.Order;
 import lk.randika.ultramobile.model.Product;
+import lk.randika.ultramobile.receiver.OrderStatusReceiver;
 
 public class OrderDetailFragment extends Fragment {
 
     private String orderId;
     private FirebaseFirestore db;
     private SimpleDateFormat dateFormat = new SimpleDateFormat("dd MMM yyyy, HH:mm", Locale.getDefault());
+    private OrderStatusReceiver orderStatusReceiver;
 
     private TextView tvOrderId, tvOrderDate, tvOrderStatus, tvShippingAddress, tvSubtotal, tvShippingFee, tvTotal;
     private LinearLayout itemsContainer;
@@ -63,6 +67,30 @@ public class OrderDetailFragment extends Fragment {
         loadOrderDetails();
 
         return view;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        // Refresh this order's detail if a status-change broadcast arrives for it
+        orderStatusReceiver = new OrderStatusReceiver((broadcastOrderId, newStatus) -> {
+            if (orderId != null && orderId.equals(broadcastOrderId)) {
+                loadOrderDetails();
+            }
+        });
+        IntentFilter filter = new IntentFilter(OrderStatusReceiver.ACTION_ORDER_UPDATED);
+        LocalBroadcastManager.getInstance(requireContext())
+                .registerReceiver(orderStatusReceiver, filter);
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        if (orderStatusReceiver != null) {
+            LocalBroadcastManager.getInstance(requireContext())
+                    .unregisterReceiver(orderStatusReceiver);
+            orderStatusReceiver = null;
+        }
     }
 
     private void loadOrderDetails() {
